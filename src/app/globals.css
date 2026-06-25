@@ -1,0 +1,467 @@
+@import "tailwindcss";
+
+/* ============================================================
+   iDECORWALA DESIGN TOKEN SYSTEM
+   Luxury Institutional B2B — Warm Parchment × Crimson × Gold
+   ============================================================ */
+
+@theme {
+  /* New design tokens */
+  --bg-elevated: #f0ece6; /* 5% lighter than --bg-base */
+  --marquee-height: 260px;
+
+
+  /* --- FONTS --- */
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-dm-sans), "DM Sans", system-ui, sans-serif;
+
+  /* --- BRAND COLOR PALETTE --- */
+
+  /* Parchment / Background family */
+  --color-parchment-50:  #FDFAF5;
+  --color-parchment-100: #F8F2E6;
+  --color-parchment-200: #F2E9D8;
+  --color-parchment-300: #EDE0CA;
+  --color-parchment-400: #E5D4B8;
+  /* Primary background */
+  --color-parchment:     #EDE8DF;
+
+  /* Crimson / Brand primary */
+  --color-crimson-50:  #FDF2F2;
+  --color-crimson-100: #F9DADA;
+  --color-crimson-200: #F0ABAB;
+  --color-crimson-300: #E07070;
+  --color-crimson-400: #C93030;
+  --color-crimson-500: #c00000;
+  --color-crimson-600: #c00000;
+  --color-crimson-700: #990000;
+  --color-crimson-800: #800000;
+  --color-crimson-900: #660000;
+  /* Primary brand crimson */
+  --color-crimson:     #c00000;
+
+  /* Gold / Accent */
+  --color-gold-300: #E8D48A;
+  --color-gold-400: #D4B85A;
+  --color-gold-500: #C9A84C;
+  --color-gold-600: #B8972E;
+  --color-gold-700: #9A7C1F;
+  /* Primary gold accent */
+  --color-gold:     #C9A84C;
+
+  /* Ink / Text family */
+  --color-ink-900: #111111;
+  --color-ink-800: #1A1A1A;
+  --color-ink-700: #2A2A2A;
+  --color-ink-600: #3D3D3D;
+  --color-ink-500: #555555;
+  --color-ink-400: #777777;
+  --color-ink-300: #999999;
+  --color-ink-200: #BBBBBB;
+  --color-ink-100: #DDDDDD;
+
+  /* --- TYPE SCALE --- */
+  /* Display — Hero headlines (Cormorant) */
+  --text-display-2xl: 9rem;       /* 144px — The mega hero headline */
+  --text-display-xl:  7rem;       /* 112px */
+  --text-display-lg:  5.5rem;     /* 88px */
+  --text-display-md:  4rem;       /* 64px */
+  --text-display-sm:  3rem;       /* 48px */
+
+  /* Body scale (DM Sans) */
+  --text-body-xl:   1.25rem;      /* 20px */
+  --text-body-lg:   1.125rem;     /* 18px */
+  --text-body-md:   1rem;         /* 16px */
+  --text-body-sm:   0.875rem;     /* 14px */
+  --text-body-xs:   0.75rem;      /* 12px */
+
+  /* Label / Caps */
+  --text-label-lg:  0.8125rem;    /* 13px — nav items */
+  --text-label-md:  0.75rem;      /* 12px — eyebrow labels */
+  --text-label-sm:  0.6875rem;    /* 11px — stat sub-labels */
+
+  /* --- LETTER SPACING --- */
+  --tracking-widest-plus: 0.25em;   /* Eyebrow labels */
+  --tracking-widest:      0.2em;    /* Nav items */
+  --tracking-wider:       0.12em;   /* CTA buttons */
+  --tracking-wide:        0.06em;   /* Subheadings */
+
+  /* --- LINE HEIGHTS --- */
+  --leading-display: 0.92;          /* Tight for mega display serif */
+  --leading-heading: 1.05;
+  --leading-body:    1.65;
+
+  /* --- SPACING SCALE (base-8) --- */
+  --spacing-section: 7rem;          /* Standard section vertical padding */
+  --spacing-section-lg: 10rem;
+
+  /* --- BORDER RADIUS --- */
+  --radius-none:  0px;
+  --radius-sm:    2px;
+  --radius-md:    4px;
+  --radius-pill:  9999px;
+
+  /* --- SHADOWS --- */
+  --shadow-gold-glow: 0 0 40px 8px rgba(201, 168, 76, 0.15);
+  --shadow-crimson:   0 4px 24px rgba(125, 21, 21, 0.25);
+  --shadow-soft:      0 2px 32px rgba(17, 17, 17, 0.08);
+}
+
+/* ============================================================
+   GLOBAL BASE STYLES
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+select option {
+  background-color: #1a1a1a !important;
+  color: #f0ece6 !important;
+}
+
+.icon-circle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: transparent;
+  border-radius: 50%;
+}
+
+.icon-circle svg.border-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.icon-circle svg.border-ring circle {
+  fill: none;
+  stroke: #b8945a;
+  stroke-width: 1.2;
+  stroke-dasharray: 125.6;
+  stroke-dashoffset: 125.6;
+  transition: stroke-dashoffset 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-circle:hover svg.border-ring circle {
+  stroke-dashoffset: 0;
+}
+
+.icon-circle .static-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(184,148,90,0.75);
+  transition: border-color 0.3s ease;
+}
+
+.icon-circle:hover .static-ring {
+  border-color: transparent;
+}
+
+.icon-inner {
+  position: relative;
+  z-index: 1;
+  color: #b8945a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.icon-circle:hover .icon-inner {
+  color: #d4a84b;
+}
+
+html {
+  scroll-behavior: auto !important;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+
+/* Lenis smooth scroll helper support classes */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+body {
+  background-color: #F5EFE4;
+  background-image: 
+    radial-gradient(circle at center, transparent 0%, rgba(201, 160, 91, 0.03) 100%),
+    url("https://www.transparenttextures.com/patterns/cream-paper.png");
+  color: var(--color-ink-800);
+  font-family: var(--font-sans);
+  font-size: var(--text-body-md);
+  line-height: var(--leading-body);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+/* ============================================================
+   TYPOGRAPHY UTILITIES
+   ============================================================ */
+
+.font-serif  { font-family: var(--font-serif); }
+.font-sans   { font-family: var(--font-sans); }
+
+/* Display sizes */
+.text-display-2xl { font-size: var(--text-display-2xl); line-height: var(--leading-display); }
+.text-display-xl  { font-size: var(--text-display-xl);  line-height: var(--leading-display); }
+.text-display-lg  { font-size: var(--text-display-lg);  line-height: var(--leading-display); }
+.text-display-md  { font-size: var(--text-display-md);  line-height: var(--leading-heading); }
+.text-display-sm  { font-size: var(--text-display-sm);  line-height: var(--leading-heading); }
+
+/* Label / eyebrow */
+.text-eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-label-md);
+  font-weight: 500;
+  letter-spacing: var(--tracking-widest-plus);
+  text-transform: uppercase;
+  color: var(--color-crimson);
+}
+
+/* Gold rule — the horizontal lines flanking eyebrow labels */
+.gold-rule {
+  display: inline-block;
+  width: 2.5rem;
+  height: 1px;
+  background-color: var(--color-gold);
+  vertical-align: middle;
+  margin: 0 0.75rem;
+}
+
+/* ============================================================
+   SELECTION COLOR
+   ============================================================ */
+
+::selection {
+  background-color: var(--color-crimson);
+  color: var(--color-parchment-50);
+}
+
+/* ============================================================
+   SCROLLBAR (subtle luxury)
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-parchment-200);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-600);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-crimson);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   NAVBAR SCROLL BEHAVIOR
+   Handled via JS class toggle in Navbar.tsx (next step variant)
+   Pre-define the scrolled state here
+   ============================================================ */
+
+header[data-scrolled="true"] {
+  background-color: rgba(237, 232, 223, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+header[data-scrolled="false"] {
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+/* ============================================================
+   HEADLINE SECTION — RESPONSIVE CLAMP SAFETY NETS
+   ============================================================ */
+
+/* Below 400px — prevent headline from overflowing */
+@media (max-width: 400px) {
+  .headline-section h2 {
+    font-size: 3rem !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+/* Ensure CTA row stacks gracefully on mobile */
+@media (max-width: 540px) {
+  .cta-row {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* ============================================================
+   STATS STRIP — MOBILE COLLAPSE
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .stats-strip-inner {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+
+  .stats-left-block {
+    width: 100% !important;
+    padding-right: 0 !important;
+    padding-bottom: clamp(32px, 5vw, 48px) !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .stats-left-block h3 {
+    text-align: center !important;
+  }
+
+  .stats-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ============================================================
+   MARQUEE ANIMATIONS
+   ============================================================ */
+
+.marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: 2rem;
+  height: var(--marquee-height);
+  background-color: transparent;
+}
+
+
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2rem;
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   ANIMATION KEYFRAMES
+   ============================================================ */
+
+@keyframes fadeUp {
+  from {
+    opacity:   0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes goldPulse {
+  0%, 100% { opacity: 0.15; }
+  50%       { opacity: 0.28; }
+}
+
+/* Ambient gold glow pulse on the top separator of stats strip */
+.stats-glow-pulse {
+  animation: goldPulse 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   TEXTURE REFINEMENT
+   Overlay a second, finer grain at lower opacity for depth
+   ============================================================ */
+
+/* Removed old experimental texture layer */
+
+/* ============================================================
+   LINK & BUTTON FOCUS STATES — Accessibility
+   ============================================================ */
+
+a:focus-visible,
+button:focus-visible {
+  outline:        2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius:  1px;
+}
+
+/* ============================================================
+   PREVENT CONTENT JUMP ON SCROLLBAR APPEAR
+   ============================================================ */
+
+html {
+  scrollbar-gutter: stable;
+}
+
+/* ============================================================
+   SMOOTH SECTION TRANSITIONS
+   ============================================================ */
+
+section {
+  will-change: auto;
+}

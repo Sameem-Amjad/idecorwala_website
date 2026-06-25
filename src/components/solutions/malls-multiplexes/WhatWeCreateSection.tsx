@@ -1,0 +1,4 @@
+import { mallFeatures } from "@/data/mallsMultiplexesData";
+import styles from "./MallsMultiplexes.module.css";
+
+export default function WhatWeCreateSection(){return <section className={`${styles.section} ${styles.center}`}><div className={styles.container}><div className={styles.eyebrow}>What We Create</div><h2 className={styles.sectionTitle}>Destinations That Drive Experiences</h2><div className={styles.ornament}><i/></div><p className={styles.sectionLead}>From grand entrances to immersive entertainment zones, we craft integrated spaces that inspire, engage and convert.</p><div className={styles.featureGrid}>{mallFeatures.map(({id,icon:Icon,title,body})=><article className={styles.featureCard} key={id}><Icon size={34} strokeWidth={1.35}/><h3>{title}</h3><p>{body}</p><div className={styles.cardLine}/></article>)}</div></div></section>}

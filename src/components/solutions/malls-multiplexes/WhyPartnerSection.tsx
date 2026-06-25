@@ -1,0 +1,4 @@
+import { partnerStats } from "@/data/mallsMultiplexesData";
+import styles from "./MallsMultiplexes.module.css";
+
+export default function WhyPartnerSection(){return <section className={styles.partner}><div className={styles.partnerPanel}><div className={styles.eyebrow}>Why Partner With Us</div><h2 className={styles.sectionTitle}>Design Intelligence.<br/>Business Impact.</h2><div className={styles.ornament}><i/></div><p>We combine design thinking with operational insight and technology to deliver spaces that are beautiful, functional and commercially successful.</p></div><div className={styles.partnerStats}>{partnerStats.map(({id,icon:Icon,value,label,sub})=><div className={styles.partnerStat} key={id}><Icon size={29} strokeWidth={1.35}/><strong>{value}</strong><h3>{label}</h3><p>{sub}</p></div>)}</div></section>}
