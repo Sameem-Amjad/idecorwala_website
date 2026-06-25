@@ -204,7 +204,7 @@ export default function SpacefoldFeatureSection() {
               {/* Headline */}
               <div className="flex justify-center mb-4">
                 <img 
-                  src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1782100987/WhatsApp_Image_2026-06-17_at_11.02.45_PM-Photoroom_gdcizb.png"
+                  src="/spacefold-logo.png"
                   alt="Spacefold Logo"
                   className="h-14 w-auto object-contain drop-shadow-[0_0_12px_rgba(201,168,76,0.35)]"
                 />

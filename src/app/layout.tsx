@@ -28,7 +28,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "iDecorwala Enterprise | Engineering Institutional Spaces",
+  title: " iDecorwala | Tech-First Institutional, Interiors, EPC, PMC & Design.",
   description:
     "India's most agile institutional solution provider. Design, Engineering, Manufacturing, and Technology — unified under one execution engine.",
   manifest: "/manifest.json",

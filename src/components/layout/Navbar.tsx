@@ -54,7 +54,7 @@ const NAV_DROPDOWNS: NavDropdown[] = [
       { label: "Hospitality",        href: "/solutions/hospitality" },
       { label: "Healthcare",         href: "/solutions/healthcare" },
       { label: "Malls & Multiplexes",href: "/solutions/malls-multiplexes" },
-      { label: "IT Park Campuses",   href: "/it-park-campuses" },
+      { label: "IT Park Campuses",   href: "/solutions/it-park-campuses" },
       { label: "Manufacturing & Infrastructure", href: "/solutions/manufacturing-infrastructure" },
     ],
   },
@@ -319,11 +319,11 @@ export default function Navbar() {
         {isThoughtLeadership ? (
           <div className="hidden lg:flex items-center gap-8 ml-auto">
             {[
-              { label: "About Us", href: "/about" },
+              { label: "About Us", href: "/company/about" },
               { label: "Services", href: "#", hasDropdown: true, dropdownKey: "services" },
               { label: "Products", href: "#", hasDropdown: true, dropdownKey: "products" },
-              { label: "Thought Leadership", href: "/thought-leadership" },
-              { label: "Careers", href: "/careers" },
+              { label: "Thought Leadership", href: "/company/thought-leadership" },
+              { label: "Careers", href: "/company/careers" },
               { label: "Contact Us", href: "/contact" },
             ].map((link) => {
               if (link.hasDropdown) {
@@ -787,9 +787,9 @@ export default function Navbar() {
             {/* Group B: Secondary Nav Links */}
             <div className="flex items-center gap-2 xl:gap-4">
               {[
-                { label: "About Us", href: "/about" },
-                { label: "Thought Leadership", href: "/thought-leadership" },
-                { label: "Partner Portal", href: "/partner-portal" }
+                { label: "About Us", href: "/company/about" },
+                { label: "Thought Leadership", href: "/company/thought-leadership" },
+                { label: "Partner Portal", href: "/company/partner-portal" }
               ].map(({ label, href }, index) => {
                 const isActive = pathname === href;
                 return (

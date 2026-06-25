@@ -250,7 +250,7 @@ function ParticleArt() {
 const contactItems = [
   {
     label: "CALL US",
-    value: "+917200303022",
+    value: "+91-7200303022",
     href: "tel:+917200303022",
     icon: PhoneIcon,
   },
@@ -1730,12 +1730,11 @@ export default function FooterSection() {
               <span className="footer-col-header" id="footer-solutions-heading">Solutions</span>
               <span className="footer-header-underline" />
               <ul className="footer-link-list">
-                <li className="footer-link-item"><a href="#solutions/hospitality">Hospitality (priority)</a></li>
-                <li className="footer-link-item"><a href="#solutions/healthcare">Healthcare</a></li>
-                <li className="footer-link-item"><a href="#solutions/malls">Malls &amp; Multiplexes</a></li>
-                <li className="footer-link-item"><a href="#solutions/techparks">ITPL / Tech Parks</a></li>
-                <li className="footer-link-item"><a href="#solutions/manufacturing">Manufacturing</a></li>
-                <li className="footer-link-item"><a href="#solutions/infrastructure">Infrastructure</a></li>
+                <li className="footer-link-item"><a href="/solutions/hospitality">Hospitality</a></li>
+                <li className="footer-link-item"><a href="/solutions/healthcare">Healthcare</a></li>
+                <li className="footer-link-item"><a href="/solutions/malls-multiplexes">Malls &amp; Multiplexes</a></li>
+                <li className="footer-link-item"><a href="/solutions/it-park-campuses">ITPL / Tech Parks</a></li>
+                <li className="footer-link-item"><a href="/solutions/manufacturing-infrastructure">Manufacturing &amp; Infrastructure</a></li>
               </ul>
             </nav>
 
@@ -1744,11 +1743,11 @@ export default function FooterSection() {
               <span className="footer-col-header" id="footer-services-heading">Services</span>
               <span className="footer-header-underline" />
               <ul className="footer-link-list">
-                <li className="footer-link-item"><a href="#services/design">Design &amp; Architecture</a></li>
-                <li className="footer-link-item"><a href="#services/civil">Civil &amp; Structural</a></li>
-                <li className="footer-link-item"><a href="#services/mep">MEP / HVAC</a></li>
-                <li className="footer-link-item"><a href="#services/epc">EPC</a></li>
-                <li className="footer-link-item"><a href="#services/interiors">Interiors &amp; Fitouts</a></li>
+                <li className="footer-link-item"><a href="/services/design-architecture">Design &amp; Architecture</a></li>
+                <li className="footer-link-item"><a href="/services/civil-structural-facade">Civil &amp; Structural &amp; Facade</a></li>
+                <li className="footer-link-item"><a href="/services/mep">MEP / HVAC</a></li>
+                <li className="footer-link-item"><a href="/services/epc">EPC</a></li>
+                <li className="footer-link-item"><a href="/services/interiors-fitouts">Interiors &amp; Fitouts</a></li>
               </ul>
             </nav>
 
@@ -1757,10 +1756,10 @@ export default function FooterSection() {
               <span className="footer-col-header" id="footer-products-heading">Products</span>
               <span className="footer-header-underline" />
               <ul className="footer-link-list">
-                <li className="footer-link-item"><a href="#products/walls">Walls (Wallpanels/Panels/Plasters)</a></li>
-                <li className="footer-link-item"><a href="#products/floors">Floors (Wood/Vinyl/Carpet/Epoxy/Turf)</a></li>
-                <li className="footer-link-item"><a href="#products/ceilings">Ceilings (Gypsum/PVC/Stretch)</a></li>
-                <li className="footer-link-item"><a href="#products/spaces">Spaces (Kitchen/Storage/Partitions/Lighting)</a></li>
+                <li className="footer-link-item"><a href="/products/walls">Walls</a></li>
+                <li className="footer-link-item"><a href="/products/floors">Floors</a></li>
+                <li className="footer-link-item"><a href="/products/ceilings">Ceilings</a></li>
+                <li className="footer-link-item"><a href="/products/spaces">Spaces</a></li>
               </ul>
             </nav>
 
@@ -1769,9 +1768,9 @@ export default function FooterSection() {
               <span className="footer-col-header" id="footer-technology-heading">Technology</span>
               <span className="footer-header-underline" />
               <ul className="footer-link-list">
-                <li className="footer-link-item"><a href="#technology/spacefold-ai">Spacefold AI</a></li>
-                <li className="footer-link-item"><a href="#technology/idda-assistant">IDDA Assistant</a></li>
-                <li className="footer-link-item"><a href="#technology/cad-cam">CAD to CAM Pipeline</a></li>
+                <li className="footer-link-item"><a href="/technology/spacefold">Spacefold AI</a></li>
+                <li className="footer-link-item"><a href="/technology/idda-assistant">IDDA Assistant</a></li>
+                <li className="footer-link-item"><a href="/technology/cad-cam">CAD to CAM Pipeline</a></li>
               </ul>
             </nav>
 
@@ -1780,13 +1779,10 @@ export default function FooterSection() {
               <span className="footer-col-header" id="footer-company-heading">Company</span>
               <span className="footer-header-underline" />
               <ul className="footer-link-list">
-                <li className="footer-link-item"><a href="#company/about">About Us</a></li>
-                <li className="footer-link-item"><a href="#company/thought-leadership">Thought Leadership</a></li>
-                <li className="footer-link-item"><a href="#company/partner-portal">Partner Portal</a></li>
-                <li className="footer-link-item"><a href="#company/careers">Careers</a></li>
-                <li className="footer-link-item"><a href="#company/privacy">Privacy Policy</a></li>
-                <li className="footer-link-item"><a href="#company/terms">Terms &amp; Conditions</a></li>
-                <li className="footer-link-item"><a href="#company/cookies">Cookie Settings</a></li>
+                <li className="footer-link-item"><a href="/company/about">About Us</a></li>
+                <li className="footer-link-item"><a href="/company/thought-leadership">Thought Leadership</a></li>
+                <li className="footer-link-item"><a href="/company/partner-portal">Partner Portal</a></li>
+                <li className="footer-link-item"><a href="/company/careers">Careers</a></li>
               </ul>
             </nav>
           </div>
@@ -1806,9 +1802,17 @@ export default function FooterSection() {
                 <div className="footer-contact-info">
                   <span className="footer-contact-header">Get In Touch</span>
                   <div className="footer-contact-content">
-                    <div><a href="tel:+918067130000">+91 80 6713 0000</a></div>
-                    <div><a href="mailto:info@idecorwala.com">info@idecorwala.com</a></div>
-                    <div><a href="https://www.idecorwala.com" target="_blank" rel="noopener noreferrer">www.idecorwala.com</a></div>
+                    {contactItems.map((item, idx) => (
+                      <div key={idx}>
+                        <a 
+                          href={item.href}
+                          target={item.external ? "_blank" : undefined}
+                          rel={item.external ? "noopener noreferrer" : undefined}
+                        >
+                          {item.value}
+                        </a>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -1823,8 +1827,8 @@ export default function FooterSection() {
                 <div className="footer-contact-info">
                   <span className="footer-contact-header">Offices</span>
                   <div className="footer-contact-content">
-                    <div>Bengaluru (HQ)<span className="footer-pipe-sep">|</span>Delhi NCR</div>
-                    <div>Mumbai<span className="footer-pipe-sep">|</span>Chennai</div>
+                    <div>Chennai (HQ)<span className="footer-pipe-sep">|</span>Delhi NCR</div>
+                    <div>Mumbai<span className="footer-pipe-sep">|</span>Bengaluru</div>
                     <div>Hyderabad<span className="footer-pipe-sep">|</span>Pune</div>
                     <div>Kolkata</div>
                   </div>

@@ -83,7 +83,7 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
     return () => observer.disconnect();
   }, []);
 
-  const handleSubscribeSubmit = (e: React.FormEvent) => {
+  const handleSubscribeSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
     if (onSubscribe) {
