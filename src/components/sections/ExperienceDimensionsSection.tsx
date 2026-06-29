@@ -121,16 +121,16 @@ export default function ExperienceDimensionsSection() {
       cardObservers.push(obs);
     });
 
-    setIsMobile(window.innerWidth < 1200);
+    setIsMobile(window.innerWidth < 1360);
 
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 1200);
+      setIsMobile(window.innerWidth < 1360);
     };
     window.addEventListener("resize", handleResize);
 
     // GSAP Context for ScrollTrigger setup and automatic cleanup
     let ctx = gsap.context(() => {
-      if (window.innerWidth >= 1200 && sectionRef.current) {
+      if (window.innerWidth >= 1360 && sectionRef.current) {
         archRefs.current.forEach((ref, idx) => {
           if (ref && ARCHES[idx]) {
             const factor = ARCHES[idx].factor;
@@ -1081,7 +1081,7 @@ export default function ExperienceDimensionsSection() {
           z-index: 0;
         }
 
-        @media (min-width: 1200px) {
+        @media (min-width: 1360px) {
           .ed-grid {
             display: flex;
             flex-direction: column;
@@ -1147,7 +1147,7 @@ export default function ExperienceDimensionsSection() {
           }
         }
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1360px) {
           .ed-sunbeam { left: 2%; }
         }
         @media (max-width: 900px) {
@@ -1175,7 +1175,7 @@ export default function ExperienceDimensionsSection() {
           }
         }
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1360px) {
           .ed-arches-container {
             display: grid !important;
             grid-template-columns: repeat(3, 1fr);

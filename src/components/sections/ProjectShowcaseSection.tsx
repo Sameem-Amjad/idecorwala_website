@@ -357,7 +357,7 @@ export default function ProjectShowcaseSection() {
         <div ref={containerRef} className="relative w-full h-full min-h-screen pt-24 pb-20 px-6 md:px-16 z-20 overflow-x-clip flex flex-col items-center">
           {/* Intro text visible during the horizontal state */}
           <div className="project-intro-text absolute top-[10%] left-1/2 -translate-x-1/2 text-center z-30 pointer-events-none flex flex-col items-center justify-center w-[90%] md:w-auto">
-            <div className="relative inline-flex flex-col items-center justify-center w-full min-w-[320px] sm:min-w-[500px] md:min-w-[660px] max-w-[720px] px-6 sm:px-12 md:px-16 py-14 md:py-20 overflow-hidden rounded-2xl">
+            <div className="relative inline-flex flex-col items-center justify-center w-full min-w-0 sm:min-w-[500px] md:min-w-[660px] max-w-[720px] px-6 sm:px-12 md:px-16 py-14 md:py-20 overflow-hidden rounded-2xl">
               {/* Elegant glassmorphism backdrop with grainy meshy black theme, gold edge tint, and deep recessed grooved frame */}
               <div 
                 className="absolute inset-0 rounded-2xl"

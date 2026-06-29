@@ -238,7 +238,7 @@ export default function OneEcosystemSection() {
         <div className="w-full xl:w-[62%] flex flex-col gap-8 justify-center">
 
           {/* Ecosystem Cards - Grid with comfortable margins */}
-          <div className="w-full grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 justify-items-center gap-x-3 gap-y-8 sm:gap-6 relative z-10">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 justify-items-center gap-x-3 gap-y-8 sm:gap-6 relative z-10">
             {CARDS.map((card, idx) => (
               <motion.div
                 key={idx}

@@ -255,7 +255,7 @@ export default function StatsStrip() {
           gap: 0px;
           position: relative;
           z-index: 1;
-          transform: translate(-40px, -50px);
+          transform: translate(-3vw, -50px);
           border-radius: 28px;
           box-shadow: 
             -12px -12px 24px rgba(255, 255, 255, 0.7),
@@ -279,11 +279,11 @@ export default function StatsStrip() {
           border-radius: 0; /* Reset to 0 for middle cards */
           /* Ungrooved/flat outer surface */
           box-shadow: none;
-          padding: 36px clamp(12px, 1.5vw, 20px) 36px;
+          padding: 36px clamp(8px, 1vw, 20px) 36px;
           text-align: center;
           transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s;
           z-index: 1;
-          width: 200px; /* Fixed width so they stay close together */
+          width: clamp(135px, 11vw, 200px); /* Responsive fluid width instead of fixed 200px */
           min-height: 420px;
           overflow: hidden;
         }
@@ -299,7 +299,7 @@ export default function StatsStrip() {
           /* Hyper-realistic deep groove/trench with textured paper inside */
           content: "";
           position: absolute;
-          inset: 14px 6px; /* Reduced side margins so the cards look much closer together */
+          inset: 14px 4px; /* Reduced side margins so the cards look much closer together */
           border-radius: 16px;
           border: 1px solid rgba(156, 114, 37, 0.25);
           
@@ -353,8 +353,8 @@ export default function StatsStrip() {
           transition: transform 1.2s ease-out;
         }
         .stat-icon-medallion {
-          width: clamp(64px, 5vw, 72px);
-          height: clamp(64px, 5vw, 72px);
+          width: clamp(52px, 4vw, 72px);
+          height: clamp(52px, 4vw, 72px);
           border-radius: 50%;
           background: linear-gradient(135deg, #F9F1E2 0%, #F3E7D1 50%, #E8D6B8 100%);
           display: flex;
@@ -368,14 +368,14 @@ export default function StatsStrip() {
             0 12px 24px rgba(156, 114, 37, 0.08);
           position: relative;
           transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-          margin-bottom: 32px;
+          margin-bottom: 24px;
           z-index: 3;
         }
         .stat-icon-medallion::before {
           content: "";
           position: absolute;
-          width: 96px;
-          height: 96px;
+          width: 80px;
+          height: 80px;
           border-radius: 50%;
           background: #D6B778;
           filter: blur(18px);
@@ -402,25 +402,25 @@ export default function StatsStrip() {
         }
         .stat-number {
           font-family: var(--font-serif);
-          font-size: 48px;
+          font-size: clamp(28px, 2.8vw, 48px);
           font-weight: 500;
           color: #111111;
           letter-spacing: -0.04em;
           line-height: 1;
           font-variant-numeric: tabular-nums;
           transition: color 1.2s ease-out;
-          margin-bottom: 24px;
+          margin-bottom: 18px;
           text-shadow: 0px 1px 1px rgba(255,255,255,0.5);
           z-index: 1;
         }
         .stat-label {
           font-family: var(--font-sans);
-          font-size: 12px;
+          font-size: clamp(9px, 0.8vw, 12px);
           font-weight: 700; /* Increased for legibility */
-          letter-spacing: 0.25em;
+          letter-spacing: 0.22em;
           text-transform: uppercase;
           line-height: 1.3;
-          margin-bottom: 20px;
+          margin-bottom: 16px;
           transition: opacity 1.2s ease-out;
           z-index: 1;
         }
@@ -429,10 +429,10 @@ export default function StatsStrip() {
         }
         .stat-divider {
           position: relative;
-          width: 48px;
+          width: 36px;
           height: 1px;
           background: linear-gradient(90deg, rgba(214,183,120,0.1) 0%, rgba(154,111,34,0.6) 30%, rgba(154,111,34,0.8) 80%, rgba(214,183,120,0) 100%);
-          margin: 0 0 24px 0;
+          margin: 0 0 16px 0;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -449,17 +449,17 @@ export default function StatsStrip() {
         }
         .stat-desc {
           font-family: var(--font-sans);
-          font-size: 0.8125rem;
+          font-size: clamp(10px, 0.8vw, 13px);
           line-height: 1.6;
           color: #4A4A4A; /* Darkened for better contrast against cardboard */
           text-shadow: 0px 1px 1px rgba(255,255,255,0.5);
-          max-width: 150px;
+          max-width: 100%;
           margin: 0 auto;
           z-index: 1;
         }
 
         /* Responsive Styles */
-        @media (max-width: 1024px) {
+        @media (max-width: 1280px) {
           .stats-strip-inner {
             flex-direction: column;
             align-items: center;

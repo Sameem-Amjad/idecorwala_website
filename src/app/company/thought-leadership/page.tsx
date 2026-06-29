@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "Thought Leadership | iDecorwala / Spacefold InteriorTech",
   description:
     "Ideas that inspire. Insights that build a better future. Explore our perspectives on sustainable design, future built environments, and industry trends.",
+  alternates: {
+    canonical: "/company/thought-leadership",
+  },
 };
 
 export default function ThoughtLeadershipPage() {

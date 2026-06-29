@@ -12,6 +12,9 @@ import styles from "@/components/about/About.module.css";
 export const metadata: Metadata = {
   title: "About Us | iDecorwala",
   description: "Discover iDecorwala's story, values, scale and multidisciplinary team.",
+  alternates: {
+    canonical: "/company/about",
+  },
 };
 
 export default function AboutPage() {

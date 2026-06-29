@@ -202,24 +202,27 @@ export default function SpacefoldFeatureSection() {
                 </div>
 
               {/* Headline */}
-              <div className="flex justify-center mb-4">
-                <img 
-                  src="/spacefold-logo.png"
-                  alt="Spacefold Logo"
-                  className="h-14 w-auto object-contain drop-shadow-[0_0_12px_rgba(201,168,76,0.35)]"
-                />
-              </div>
 
               <h2 className="spacefold-title text-4xl font-bold text-center mb-6" ref={headlineRef}>
                   <span className="block text-white headline-groove-silver">SEE IT. FEEL IT.</span>
                   <span className="block text-gold headline-groove-gold my-2 lowercase italic tracking-wide text-[0.85em] font-serif normal-case">then</span>
                   <span className="block text-gold headline-groove-gold">WE BUILT IT</span>
-               </h2>
+              </h2>
 
               {/* Subheadline */}
-                <p className="spacefold-subtitle text-center subtitle-groove max-w-2xl mx-auto px-4" ref={subheadlineRef}>
+              <p className="spacefold-subtitle text-center subtitle-groove max-w-2xl mx-auto px-4" ref={subheadlineRef}>
                 Our proprietary technology transforms imagination into immersive reality — so every decision is confident, every outcome is certain.
               </p>
+
+              <div className="flex justify-center" style={{ marginTop: "24px", marginBottom: "24px" }}>
+                <img 
+                  src="/spacefold-icon.png"
+                  alt="Spacefold Logo"
+                  className="w-auto object-contain drop-shadow-[0_0_16px_rgba(201,168,76,0.4)]"
+                  style={{ height: "120px" }}
+                />
+              </div>
+
             </div>
           {/* Process Cards */}
         <div className="spacefold-process flex justify-center items-start gap-4 overflow-x-auto">

@@ -30,26 +30,13 @@ type DropdownItem = {
 type NavDropdown = {
   key: string;
   trigger: string;
-  sectionTitle: string;
-  subLabel: string;
   links: DropdownItem[];
 };
-
-const NAV_LINKS = [
-  { label: "About Us",               href: "/about" },
-  { label: "Experience Dimensions",  href: "/experience" },
-  { label: "Our Businesses",         href: "/businesses" },
-  { label: "Projects",               href: "/projects" },
-  { label: "Hospitality CoE",        href: "/hospitality" },
-  { label: "Insights",               href: "/insights" },
-];
 
 const NAV_DROPDOWNS: NavDropdown[] = [
   {
     key: "solutions",
     trigger: "SOLUTIONS",
-    sectionTitle: "SOLUTIONS",
-    subLabel: "BY INDUSTRY",
     links: [
       { label: "Hospitality",        href: "/solutions/hospitality" },
       { label: "Healthcare",         href: "/solutions/healthcare" },
@@ -61,8 +48,6 @@ const NAV_DROPDOWNS: NavDropdown[] = [
   {
     key: "services",
     trigger: "SERVICES",
-    sectionTitle: "SERVICES",
-    subLabel: "OUR LIFECYCLE CAPABILITIES",
     links: [
       { label: "Design & Architecture", href: "/services/design-architecture" },
       { label: "Civil, Structural & Facade", href: "/services/civil-structural-facade" },
@@ -72,8 +57,6 @@ const NAV_DROPDOWNS: NavDropdown[] = [
   {
     key: "products",
     trigger: "PRODUCTS",
-    sectionTitle: "PRODUCTS",
-    subLabel: "INNOVATIVE PLUG-AND-PLAY FINISHED GOODS",
     links: [
       { label: "High-Volume Products",  href: "/products/high-volume" },
       { 
@@ -113,8 +96,6 @@ const NAV_DROPDOWNS: NavDropdown[] = [
   {
     key: "technology",
     trigger: "TECHNOLOGY",
-    sectionTitle: "TECHNOLOGY",
-    subLabel: "THE METAVERSE FRONTIER",
     links: [
       { label: "Spacefold™", href: "/technology/spacefold" },
     ],
@@ -168,7 +149,7 @@ export default function Navbar() {
       }
     };
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024);
+      setIsMobile(window.innerWidth <= 1280);
     };
     handleScroll();
     handleResize();
@@ -317,7 +298,7 @@ export default function Navbar() {
 
         {/* ── CENTER: Desktop Nav Links with Dropdowns ── */}
         {isThoughtLeadership ? (
-          <div className="hidden lg:flex items-center gap-8 ml-auto">
+          <div className="hidden xl:flex items-center gap-8 ml-auto">
             {[
               { label: "About Us", href: "/company/about" },
               { label: "Services", href: "#", hasDropdown: true, dropdownKey: "services" },
@@ -410,7 +391,7 @@ export default function Navbar() {
             })}
           </div>
         ) : (
-          <div className="hidden lg:flex items-center gap-4 xl:gap-8 ml-8 xl:ml-16 mr-auto">
+          <div className="hidden xl:flex items-center gap-4 xl:gap-8 ml-8 xl:ml-16 mr-auto">
             {/* Group A: Primary Nav Items */}
             <div className="flex items-center gap-3 xl:gap-4">
               {NAV_DROPDOWNS.map((nav, index) => {
@@ -530,44 +511,6 @@ export default function Navbar() {
                           overflow: "hidden",
                           perspective: "600px",
                         }}>
-                          {/* The Nameplate Header Card */}
-                          <div style={{
-                            padding: "18px 20px 12px 20px",
-                            textAlign: "left",
-                          }}>
-                            <p style={{
-                              fontFamily: "'DM Sans', sans-serif",
-                              fontSize: "13px",
-                              fontWeight: 800,
-                              letterSpacing: "0.18em",
-                              textTransform: "uppercase",
-                              color: "#8B1A1A",
-                              margin: "0 0 5px 0",
-                            }}>
-                              {nav.sectionTitle}
-                            </p>
-                            <p style={{
-                              fontFamily: "'DM Sans', sans-serif",
-                              fontSize: "10.5px",
-                              fontWeight: 700,
-                              letterSpacing: "0.20em",
-                              textTransform: "uppercase",
-                              color: "#C4973A",
-                              opacity: 0.95,
-                              margin: "0",
-                              maxWidth: "320px",
-                            }}>
-                              {nav.subLabel}
-                            </p>
-                          </div>
-
-                          {/* Fading separator between header and first card */}
-                          <div style={{
-                            height: "1px",
-                            margin: "0 20px",
-                            background: "linear-gradient(to right, transparent 0%, rgba(196,151,58,0.45) 20%, rgba(196,151,58,0.45) 80%, transparent 100%)",
-                          }} />
-
                           {/* Individual Nameplate Cards (one per link) */}
                           {nav.key === "products" ? (
                             <div style={{ padding: "10px 20px 20px 20px" }}>
@@ -710,7 +653,7 @@ export default function Navbar() {
                             </div>
 
                           ) : (
-                            <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+                            <div style={{ display: "flex", flexDirection: "column", textAlign: "left", paddingTop: "8px" }}>
                               {nav.links.map((item, index) => (
                                 <Fragment key={item.label}>
                                   <Link
@@ -857,7 +800,7 @@ export default function Navbar() {
               whiteSpace: "nowrap",
               boxShadow: "0 8px 24px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(139, 26, 26, 0.35), inset 0 2px 0px rgba(255, 255, 255, 0.15), inset 0 -2px 0px rgba(0, 0, 0, 0.4)",
             }}
-            className="hover:scale-[1.03] hover:shadow-[0_12px_28px_rgba(0,0,0,0.55),0_6px_16px_rgba(139,26,26,0.45)] hover:border-[#E6C280] hidden lg:inline-flex"
+            className="hover:scale-[1.03] hover:shadow-[0_12px_28px_rgba(0,0,0,0.55),0_6px_16px_rgba(139,26,26,0.45)] hover:border-[#E6C280] hidden xl:inline-flex"
           >
             LET&apos;S CONNECT
             <span style={{ fontSize: "0.875rem" }}>→</span>
@@ -865,7 +808,7 @@ export default function Navbar() {
  
           {/* Mobile Hamburger */}
           <button
-            className="lg:hidden flex flex-col gap-1.5 p-2"
+            className="xl:hidden flex flex-col gap-1.5 p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle navigation"
             style={{ color: (scrolled || pathname !== "/") ? "var(--color-ink-800)" : "white", transition: "color 0.4s ease" }}
@@ -893,7 +836,7 @@ export default function Navbar() {
       {/* ── MOBILE MENU DRAWER ── */}
       <div 
         className={cn(
-          "lg:hidden fixed inset-0 z-[100] transition-opacity duration-300",
+          "xl:hidden fixed inset-0 z-[100] transition-opacity duration-300",
           mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >

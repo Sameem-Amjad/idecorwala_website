@@ -11,6 +11,9 @@ import styles from "@/components/partner-portal/PartnerPortal.module.css";
 export const metadata: Metadata = {
   title: "Partner Portal | iDecorwala",
   description: "Join the iDecorwala partner network and build better environments through trusted collaboration.",
+  alternates: {
+    canonical: "/company/partner-portal",
+  },
 };
 
 export default function PartnerPortalPage() {

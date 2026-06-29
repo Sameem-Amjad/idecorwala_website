@@ -999,36 +999,96 @@ export default function FooterSection() {
           stroke-linejoin: round;
         }
 
-        @media (max-width: 1200px) {
-          .rfp-footer-section {
-            padding-left: 24px;
-            padding-right: 24px;
+        @media (max-width: 1279px) {
+          .footer-inner-container {
+            padding-left: 40px;
+            padding-right: 40px;
+          }
+          /* Reflow columns to span multiple grid slots */
+          .footer-top-grid {
+            grid-template-columns: repeat(6, 1fr);
           }
 
-          .rfp-left-panel {
-            padding: 72px 48px 52px;
+          .footer-brand-col {
+            grid-column: 1 / -1;
+            margin-bottom: 24px;
           }
 
-          .rfp-right-panel {
-            padding: 52px 48px 40px;
+          .footer-link-col {
+            grid-column: span 2; /* flows 3 columns per row */
           }
 
-          .rfp-contact-bar {
-            flex-wrap: wrap;
-            align-items: flex-start;
+          .footer-contact-map-row {
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
           }
 
-          .rfp-contact-column {
-            flex: 1 1 calc(33.333% - 24px);
+          .footer-contact-blocks {
+            width: 100%;
+            justify-content: space-around;
+            gap: 24px;
           }
 
-          .rfp-contact-column:nth-child(4) {
-            flex-basis: calc(66.666% - 24px);
-            min-width: min(100%, 360px);
+          .footer-map-container {
+            width: 100%;
+            max-width: 480px;
+            height: 200px;
           }
         }
 
-        @media (max-width: 920px) {
+        @media (max-width: 1023px) {
+          .footer-inner-container {
+            padding-left: 48px;
+            padding-right: 48px;
+          }
+
+          .footer-top-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+
+          .footer-brand-col {
+            grid-column: 1 / -1;
+          }
+
+          .footer-link-col {
+            grid-column: span 1; /* flows 2 columns per row */
+          }
+
+          .footer-contact-map-row {
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+          }
+
+          .footer-contact-blocks {
+            width: 100%;
+            flex-direction: column;
+            gap: 24px;
+          }
+
+          .footer-contact-item {
+            max-width: 100%;
+          }
+
+          .footer-contact-divider {
+            height: 1px;
+            width: 100%;
+            display: none;
+          }
+
+          .footer-contact-item + .footer-contact-item {
+            border-top: 1px solid rgba(201, 160, 80, 0.25);
+            padding-top: 24px;
+          }
+
+          .footer-map-container {
+            width: 70%;
+            height: 200px;
+          }
+        }
+
+        @media (max-width: 1024px) {
           .rfp-upper {
             flex-direction: column;
           }
@@ -1745,8 +1805,8 @@ export default function FooterSection() {
               <ul className="footer-link-list">
                 <li className="footer-link-item"><a href="/services/design-architecture">Design &amp; Architecture</a></li>
                 <li className="footer-link-item"><a href="/services/civil-structural-facade">Civil &amp; Structural &amp; Facade</a></li>
-                <li className="footer-link-item"><a href="/services/mep">MEP / HVAC</a></li>
-                <li className="footer-link-item"><a href="/services/epc">EPC</a></li>
+                <li className="footer-link-item"><a href="#">MEP / HVAC</a></li>
+                <li className="footer-link-item"><a href="#">EPC</a></li>
                 <li className="footer-link-item"><a href="/services/interiors-fitouts">Interiors &amp; Fitouts</a></li>
               </ul>
             </nav>

@@ -263,7 +263,7 @@ export default function ClientsBrandsSection() {
       </svg>
 
       {/* Content wrapper */}
-      <div className="relative z-10 w-full max-w-[1280px] mx-auto flex flex-col items-center xl:translate-x-8 2xl:translate-x-12">
+      <div className="relative z-10 w-full max-w-[1280px] mx-auto flex flex-col items-center">
         
         {/* Header Block */}
         <div className="w-full max-w-[760px] mx-auto text-center mb-8 sm:mb-10 lg:mb-14">

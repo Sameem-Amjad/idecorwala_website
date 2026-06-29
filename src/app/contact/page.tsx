@@ -5,9 +5,14 @@ import ContactCategoryStrip from "@/components/contact/ContactCategoryStrip";
 import PanIndiaSection from "@/components/contact/PanIndiaSection";
 import StatsStrip from "@/components/contact/StatsStrip";
 
-export const metadata = {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
   title: "Contact Us | iDecorwala Enterprise",
   description: "Connect with India's most agile institutional solutions provider.",
+  alternates: {
+    canonical: "/contact",
+  },
 };
 
 export default function ContactPage() {

@@ -27,11 +27,42 @@ const inter = Inter({
   display: "swap",
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://idecorwala.com";
+
 export const metadata: Metadata = {
-  title: " iDecorwala | Tech-First Institutional, Interiors, EPC, PMC & Design.",
+  metadataBase: new URL(BASE_URL),
+  title: "iDecorwala | Tech-First Institutional, Interiors, EPC, PMC & Design.",
   description:
     "India's most agile institutional solution provider. Design, Engineering, Manufacturing, and Technology — unified under one execution engine.",
   manifest: "/manifest.json",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "iDecorwala | Tech-First Institutional, Interiors, EPC, PMC & Design.",
+    description:
+      "India's most agile institutional solution provider. Design, Engineering, Manufacturing, and Technology — unified under one execution engine.",
+    url: BASE_URL,
+    siteName: "iDecorwala",
+    locale: "en_IN",
+    type: "website",
+    images: [
+      {
+        // TODO: Replace this placeholder image URL with your actual production Open Graph image URL.
+        url: `${BASE_URL}/og-image-placeholder.png`,
+        width: 1200,
+        height: 630,
+        alt: "iDecorwala - Tech-First Institutional, Interiors, EPC, PMC & Design",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "iDecorwala | Tech-First Institutional, Interiors, EPC, PMC & Design.",
+    description:
+      "India's most agile institutional solution provider. Design, Engineering, Manufacturing, and Technology — unified under one execution engine.",
+    images: [`${BASE_URL}/og-image-placeholder.png`], // TODO: Replace this placeholder
+  },
   other: {
     "theme-color": "#000000",
     "mobile-web-app-capable": "yes",
@@ -45,8 +76,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "iDecorwala",
+    "url": BASE_URL,
+    "logo": "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781154909/iD_logo_RED-Photoroom_p59ja1.png",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Chennai",
+      "addressCountry": "India",
+    },
+  };
+
   return (
     <html lang="en" className={`${cormorant.variable} ${dmSans.variable} ${inter.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
       <body className="font-sans antialiased">
         <PWARegister />
         <SmoothScrolling>
