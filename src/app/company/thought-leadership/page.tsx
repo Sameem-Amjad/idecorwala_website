@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Breadcrumb from "@/components/thought-leadership/Breadcrumb";
 import ThoughtHero from "@/components/thought-leadership/ThoughtHero";
 import OurPerspective from "@/components/thought-leadership/OurPerspective";
-import FeaturedInsights from "@/components/thought-leadership/FeaturedInsights";
+import ThoughtLeadershipList from "@/components/thought-leadership/ThoughtLeadershipList";
 import ExploreByTopic from "@/components/thought-leadership/ExploreByTopic";
 import SubscribeBanner from "@/components/thought-leadership/SubscribeBanner";
 import FooterSection from "@/components/sections/FooterSection";
@@ -24,7 +24,7 @@ export default function ThoughtLeadershipPage() {
       <Breadcrumb />
       <ThoughtHero />
       <OurPerspective />
-      <FeaturedInsights />
+      <ThoughtLeadershipList />
       <ExploreByTopic />
       <SubscribeBanner />
       <FooterSection />

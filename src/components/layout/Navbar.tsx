@@ -20,6 +20,9 @@ import {
   Cpu
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { getActiveProducts } from "@/lib/supabaseClient";
+console.log("[Navbar] Initializing Navbar component...");
+import { useMemo } from "react";
 
 type DropdownItem = {
   label: string;
@@ -58,7 +61,6 @@ const NAV_DROPDOWNS: NavDropdown[] = [
     key: "products",
     trigger: "PRODUCTS",
     links: [
-      { label: "High-Volume Products",  href: "/products/high-volume" },
       { 
         label: "Walls", 
         href: "/products/high-volume#walls",
@@ -116,6 +118,79 @@ export default function Navbar() {
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const [openMobileSubGroup, setOpenMobileSubGroup] = useState<string | null>(null);
   const [isHeadlineActive, setIsHeadlineActive] = useState(false);
+  const [dbProducts, setDbProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    console.log("[Navbar] Fetching products from Supabase...");
+    getActiveProducts()
+      .then((data) => {
+        console.log("[Navbar] Successfully fetched products count:", data.length, "Categories:", Array.from(new Set(data.map((p: any) => p.category))));
+        setDbProducts(data);
+      })
+      .catch((err) => {
+        console.error("[Navbar] Error loading products for navbar:", err);
+      });
+  }, []);
+
+  const dynamicProductsLinks = useMemo(() => {
+    if (!dbProducts || dbProducts.length === 0) {
+      console.log("[Navbar] No products fetched, using static fallback navigation.");
+      return [
+        {
+          label: "Walls",
+          href: "/products#walls",
+          subItems: [
+            { label: "Wallpaper", href: "/products" },
+            { label: "Wall Murals", href: "/products" },
+            { label: "Wall Art & Decals", href: "/products" }
+          ]
+        },
+        {
+          label: "Floors",
+          href: "/products#floor",
+          subItems: [
+            { label: "Wood", href: "/products" },
+            { label: "Vinyl", href: "/products" }
+          ]
+        }
+      ];
+    }
+    
+    const categoriesMap: { [key: string]: { order: number; items: any[] } } = {};
+    dbProducts.forEach((p) => {
+      const cat = p.category || "General";
+      if (!categoriesMap[cat]) {
+        categoriesMap[cat] = {
+          order: p.category_order || 99,
+          items: []
+        };
+      }
+      categoriesMap[cat].items.push({
+        label: p.name,
+        href: p.redirect_url
+      });
+    });
+
+    return Object.entries(categoriesMap)
+      .sort((a, b) => a[1].order - b[1].order)
+      .map(([catName, data]) => ({
+        label: catName,
+        href: `/products#${catName.toLowerCase()}`,
+        subItems: data.items
+      }));
+  }, [dbProducts]);
+
+  const navDropdowns = useMemo(() => {
+    return NAV_DROPDOWNS.map((dropdown) => {
+      if (dropdown.key === "products") {
+        return {
+          ...dropdown,
+          links: dynamicProductsLinks,
+        };
+      }
+      return dropdown;
+    });
+  }, [dynamicProductsLinks]);
 
   useEffect(() => {
     setMounted(true);
@@ -394,7 +469,7 @@ export default function Navbar() {
           <div className="hidden xl:flex items-center gap-4 xl:gap-8 ml-8 xl:ml-16 mr-auto">
             {/* Group A: Primary Nav Items */}
             <div className="flex items-center gap-3 xl:gap-4">
-              {NAV_DROPDOWNS.map((nav, index) => {
+              {navDropdowns.map((nav, index) => {
                 let IconComponent = Box;
                 if (nav.key === "solutions") IconComponent = Building;
                 else if (nav.key === "services") IconComponent = HardHat;
@@ -585,9 +660,17 @@ export default function Navbar() {
                                 </Link>
                               ))}
 
-                              {/* Walls / Floors / Ceilings — 3-column grid */}
-                              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "20px" }}>
-                                {nav.links.filter(item => item.label !== "High-Volume Products").map((item, index) => (
+                              {/* Walls / Floors / Ceilings — Dynamic category grid */}
+                              {(() => {
+                                const subLinks = nav.links.filter(item => item.label !== "High-Volume Products");
+                                const numCols = subLinks.length;
+                                return (
+                                  <div style={{ 
+                                    display: "grid", 
+                                    gridTemplateColumns: numCols <= 4 ? `repeat(${numCols}, 1fr)` : "repeat(3, 1fr)", 
+                                    gap: "20px" 
+                                  }}>
+                                    {subLinks.map((item, index) => (
                                   <div key={item.label}>
                                     <Link
                                       href={item.href}
@@ -620,36 +703,45 @@ export default function Navbar() {
                                       </span>
                                     </Link>
                                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                                      {item.subItems?.map((sub, subIdx) => (
-                                        <Link
-                                          key={sub.label}
-                                          href={sub.href}
-                                          className="group hover:text-[#8B1A1A] hover:translate-x-1"
-                                          style={{
-                                            fontFamily: "'DM Sans', sans-serif",
-                                            fontSize: "13px",
-                                            fontWeight: 600,
-                                            color: "#4A4541",
-                                            textDecoration: "none",
-                                            transition: "all 150ms ease-out",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "6px",
-                                            animationName: activeDropdown === nav.key ? "nameplateReveal" : "none",
-                                            animationDuration: "280ms",
-                                            animationTimingFunction: "cubic-bezier(0.22, 0.61, 0.36, 1)",
-                                            animationFillMode: "both",
-                                            animationDelay: activeDropdown === nav.key ? `${(index * 40) + (subIdx * 20) + 100}ms` : "0ms",
-                                          }}
-                                        >
-                                          <span style={{ fontSize: "10px", color: "#C4973A" }}>•</span>
-                                          {sub.label}
-                                        </Link>
-                                      ))}
+                                      {item.subItems?.map((sub, subIdx) => {
+                                        const isExternal = sub.href.startsWith("http");
+                                        const Tag = isExternal ? "a" : Link;
+                                        const linkProps = isExternal 
+                                          ? { href: sub.href, target: "_blank", rel: "noopener noreferrer" }
+                                          : { href: sub.href };
+                                        return (
+                                          <Tag
+                                            key={sub.label}
+                                            {...linkProps}
+                                            className="group hover:text-[#8B1A1A] hover:translate-x-1"
+                                            style={{
+                                              fontFamily: "'DM Sans', sans-serif",
+                                              fontSize: "13px",
+                                              fontWeight: 600,
+                                              color: "#4A4541",
+                                              textDecoration: "none",
+                                              transition: "all 150ms ease-out",
+                                              display: "flex",
+                                              alignItems: "center",
+                                              gap: "6px",
+                                              animationName: activeDropdown === nav.key ? "nameplateReveal" : "none",
+                                              animationDuration: "280ms",
+                                              animationTimingFunction: "cubic-bezier(0.22, 0.61, 0.36, 1)",
+                                              animationFillMode: "both",
+                                              animationDelay: activeDropdown === nav.key ? `${(index * 40) + (subIdx * 20) + 100}ms` : "0ms",
+                                            }}
+                                          >
+                                            <span style={{ fontSize: "10px", color: "#C4973A" }}>•</span>
+                                            {sub.label}
+                                          </Tag>
+                                        );
+                                      })}
                                     </div>
                                   </div>
-                                ))}
-                              </div>
+                                    ))}
+                                  </div>
+                                );
+                              })()}
                             </div>
 
                           ) : (
@@ -995,7 +1087,7 @@ export default function Navbar() {
                           }}
                         >
                           <div className="flex flex-col gap-2.5 pb-3 pl-1">
-                            {NAV_DROPDOWNS.find(d => d.key === item.key)?.links.map((subLink) => {
+                            {navDropdowns.find(d => d.key === item.key)?.links.map((subLink) => {
                               const isSubOpen = openMobileSubGroup === subLink.label;
                               return (
                                 <div key={subLink.label} className="flex flex-col">
@@ -1025,22 +1117,30 @@ export default function Navbar() {
                                       />
                                     </button>
                                   ) : (
-                                    <Link
-                                      href={subLink.href}
-                                      onClick={() => setMobileOpen(false)}
-                                      className="font-sans text-[14px] text-[#211C19] font-medium hover:text-[#8B1A1A] py-1 transition-colors flex items-center gap-2.5 text-left"
-                                      style={{ textDecoration: "none" }}
-                                    >
-                                      <span 
-                                        className="w-1.5 h-1.5 rotate-45 flex-shrink-0" 
-                                        style={{
-                                          background: "linear-gradient(135deg, #b38728 0%, #fbf5b7 50%, #996515 100%)",
-                                          border: "1px solid #C9A84C",
-                                          boxShadow: "0 1px 3px rgba(163, 127, 61, 0.4)",
-                                        }}
-                                      />
-                                      {subLink.label}
-                                    </Link>
+                                    (() => {
+                                      const isExternal = subLink.href.startsWith("http");
+                                      const Tag = isExternal ? "a" : Link;
+                                      const linkProps = isExternal 
+                                        ? { href: subLink.href, target: "_blank", rel: "noopener noreferrer" }
+                                        : { href: subLink.href, onClick: () => setMobileOpen(false) };
+                                      return (
+                                        <Tag
+                                          {...linkProps}
+                                          className="font-sans text-[14px] text-[#211C19] font-medium hover:text-[#8B1A1A] py-1 transition-colors flex items-center gap-2.5 text-left"
+                                          style={{ textDecoration: "none" }}
+                                        >
+                                          <span 
+                                            className="w-1.5 h-1.5 rotate-45 flex-shrink-0" 
+                                            style={{
+                                              background: "linear-gradient(135deg, #b38728 0%, #fbf5b7 50%, #996515 100%)",
+                                              border: "1px solid #C9A84C",
+                                              boxShadow: "0 1px 3px rgba(163, 127, 61, 0.4)",
+                                            }}
+                                          />
+                                          {subLink.label}
+                                        </Tag>
+                                      );
+                                    })()
                                   )}
                                   
                                   {subLink.subItems && (
@@ -1054,18 +1154,24 @@ export default function Navbar() {
                                       }}
                                     >
                                       <div className="flex flex-col gap-2 py-2">
-                                        {subLink.subItems.map((subItem) => (
-                                          <Link
-                                            key={subItem.label}
-                                            href={subItem.href}
-                                            onClick={() => setMobileOpen(false)}
-                                            className="font-sans text-[13px] text-[#4A4541] font-medium hover:text-[#8B1A1A] py-1 transition-colors flex items-center gap-2 text-left"
-                                            style={{ textDecoration: "none" }}
-                                          >
-                                            <span style={{ fontSize: "10px", color: "#C4973A" }}>•</span>
-                                            {subItem.label}
-                                          </Link>
-                                        ))}
+                                        {subLink.subItems.map((subItem) => {
+                                          const isExternal = subItem.href.startsWith("http");
+                                          const Tag = isExternal ? "a" : Link;
+                                          const linkProps = isExternal 
+                                            ? { href: subItem.href, target: "_blank", rel: "noopener noreferrer" }
+                                            : { href: subItem.href, onClick: () => setMobileOpen(false) };
+                                          return (
+                                            <Tag
+                                              key={subItem.label}
+                                              {...linkProps}
+                                              className="font-sans text-[13px] text-[#4A4541] font-medium hover:text-[#8B1A1A] py-1 transition-colors flex items-center gap-2 text-left"
+                                              style={{ textDecoration: "none" }}
+                                            >
+                                              <span style={{ fontSize: "10px", color: "#C4973A" }}>•</span>
+                                              {subItem.label}
+                                            </Tag>
+                                          );
+                                        })}
                                       </div>
                                     </div>
                                   )}

@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef, Fragment } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { getPublishedBlogs, Blog as DbBlogPost } from "@/lib/supabaseClient";
+import { RefreshCw } from "lucide-react";
 
 export interface BlogPost {
   id: string;
@@ -57,16 +59,58 @@ const DEFAULT_POSTS: BlogPost[] = [
   }
 ];
 
+function mapDbBlogToBlogPost(dbBlog: DbBlogPost): BlogPost {
+  return {
+    id: String(dbBlog.id),
+    category: dbBlog.category ? dbBlog.category.toUpperCase() : "GENERAL",
+    date: dbBlog.published_date 
+      ? new Date(dbBlog.published_date).toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric"
+        }) 
+      : "No Date",
+    readTime: dbBlog.reading_time || "5 min read",
+    title: dbBlog.title || "",
+    description: dbBlog.excerpt || "",
+    image: dbBlog.cover_image || "/imgs/blogs_placeholder.png",
+    href: `/company/thought-leadership`
+  };
+}
+
 interface BlogsSectionProps {
   posts?: BlogPost[];
   onSubscribe?: (email: string) => void;
 }
 
-export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: BlogsSectionProps) {
+export default function BlogsSection({ posts, onSubscribe }: BlogsSectionProps) {
+  const [blogsList, setBlogsList] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(!posts);
+  const [error, setError] = useState<string | null>(null);
   const [inView, setInView] = useState(false);
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  const fetchFeaturedBlogs = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getPublishedBlogs();
+      const featured = data.filter(b => b.tags && b.tags.includes("featured"));
+      setBlogsList(featured.map(mapDbBlogToBlogPost));
+    } catch (err: any) {
+      setError(err.message || "Failed to load blogs.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!posts) {
+      fetchFeaturedBlogs();
+    }
+  }, [posts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -83,7 +127,7 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
     return () => observer.disconnect();
   }, []);
 
-  const handleSubscribeSubmit = (e: React.SubmitEvent) => {
+  const handleSubscribeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) return;
     if (onSubscribe) {
@@ -92,6 +136,8 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
     setSubscribed(true);
     setEmail("");
   };
+
+  const activePosts = posts || blogsList;
 
   return (
     <section
@@ -139,14 +185,9 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
       {/* Luxury Golden Threads Background Layer */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         <svg className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%]" style={{ opacity: 0.50 }} viewBox="0 0 1200 800" fill="none">
-          {/* Main Clean Straight Diagonal Thread */}
           <line x1="-100" y1="200" x2="1300" y2="800" stroke="#C9A96E" strokeWidth="1.5" />
-          {/* Parallel Dashed Accent Thread */}
           <line x1="-100" y1="240" x2="1300" y2="840" stroke="#C9A96E" strokeWidth="1.0" strokeDasharray="6 10" />
-          {/* Parallel Thin Accent Thread */}
           <line x1="-100" y1="160" x2="1300" y2="760" stroke="#C9A96E" strokeWidth="0.75" />
-          
-          {/* Glowing dot highlights along the main path */}
           <circle cx="250" cy="350" r="4.5" fill="#C9A96E" style={{ filter: "drop-shadow(0 0 6px #C9A96E)" }} />
           <circle cx="600" cy="500" r="4.5" fill="#C9A96E" style={{ filter: "drop-shadow(0 0 6px #C9A96E)" }} />
           <circle cx="950" cy="650" r="4.5" fill="#C9A96E" style={{ filter: "drop-shadow(0 0 6px #C9A96E)" }} />
@@ -217,7 +258,7 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
         .blog-card__image-wrapper {
           position: relative;
           width: 100%;
-          aspect-ratio: 16 / 9; /* Wide horizontal rectangle top banner */
+          aspect-ratio: 16 / 9;
           overflow: hidden;
           border-top-left-radius: 16px;
           border-top-right-radius: 16px;
@@ -235,7 +276,7 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
           display: flex;
           flex-direction: column;
           flex-grow: 1;
-          padding: 28px 24px 32px 24px; /* Premium breathing room on all sides */
+          padding: 28px 24px 32px 24px;
           text-align: left;
         }
 
@@ -246,7 +287,7 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
           letter-spacing: 0.12em;
           text-transform: uppercase;
           color: #C4973A;
-          margin-bottom: 6px; /* Small neat gap to date/read time */
+          margin-bottom: 6px;
         }
 
         .blog-card__date-time {
@@ -258,7 +299,7 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
           font-weight: 500;
           letter-spacing: 0.04em;
           color: #8C8880;
-          margin-bottom: 14px; /* Medium gap to title */
+          margin-bottom: 14px;
         }
 
         .blog-card__meta-separator {
@@ -272,10 +313,10 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
 
         .blog-card__title {
           font-family: var(--font-serif);
-          font-size: 1.15rem; /* Balanced size, prevents awkward wrapping on desktop */
+          font-size: 1.15rem;
           line-height: 1.35;
           margin-top: 0;
-          margin-bottom: 12px; /* Medium gap to description */
+          margin-bottom: 12px;
           color: #2E2C28;
           text-align: left;
           font-weight: 500;
@@ -288,7 +329,7 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
           color: #6E6B64;
           line-height: 1.55;
           margin-top: 0;
-          margin-bottom: 24px; /* Larger gap to read more CTA */
+          margin-bottom: 24px;
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
@@ -297,7 +338,7 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
         }
 
         .blog-card__cta {
-          margin-top: auto; /* Push CTA to bottom for alignment */
+          margin-top: auto;
           padding-top: 12px;
           font-size: 0.725rem;
           letter-spacing: 0.1em;
@@ -458,94 +499,122 @@ export default function BlogsSection({ posts = DEFAULT_POSTS, onSubscribe }: Blo
         </div>
 
         {/* ── CARD GRID ── */}
-        <div className="blogs-grid">
-          {posts.map((post, index) => (
-            <div
-              key={post.id}
-              className="blogs-card blog-card group relative overflow-hidden rounded-[16px] transition-all duration-300 blogs-reveal-el"
-              style={{
-                opacity: inView ? 1 : 0,
-                transform: inView ? "translateY(0)" : "translateY(24px)",
-                transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease",
-                transitionDelay: inView ? `${index * 100}ms` : "0ms",
-                boxShadow: "0 2px 12px rgba(61,61,58,0.04)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#C9A96E";
-                e.currentTarget.style.boxShadow = "0 0 0 1px #C9A96E, 0 12px 32px rgba(201,169,110,0.12)";
-                e.currentTarget.style.transform = "translateY(-4px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "rgba(196, 151, 58, 0.15)";
-                e.currentTarget.style.boxShadow = "0 2px 12px rgba(61,61,58,0.04)";
-                e.currentTarget.style.transform = "translateY(0px)";
-              }}
-            >
-              {/* Card Image Wrapper */}
-              <div className="blog-card__image-wrapper">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="blog-card__image transition-transform duration-500 ease-out group-hover:scale-106"
-                />
-                
-                {/* Specific stronger image grain layer */}
-                <div
-                  className="absolute inset-0 pointer-events-none z-10 opacity-12"
-                  style={{
-                    filter: "url(#blogs-grain-noise)",
-                    mixBlendMode: "overlay",
-                  }}
-                />
-
-                {/* Shimmer Sweeper Overlay */}
-                <div className="blogs-card-shimmer absolute inset-0 z-20 pointer-events-none"
-                  style={{
-                    background: "linear-gradient(115deg, transparent 0%, rgba(201,169,110,0.25) 50%, transparent 100%)",
-                    width: "150%",
-                    transform: "translateX(-150%)",
-                  }}
-                />
+        {loading ? (
+          <div className="blogs-grid">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="blogs-card blog-card animate-pulse rounded-[16px] border border-transparent bg-neutral-200/50" style={{ height: "380px" }}>
+                <div style={{ width: "100%", aspectRatio: "16/9", background: "#e5e5e5", borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }} />
+                <div style={{ padding: "28px 24px" }}>
+                  <div style={{ width: "80px", height: "12px", background: "#e5e5e5", borderRadius: "4px", marginBottom: "8px" }} />
+                  <div style={{ width: "140px", height: "12px", background: "#e5e5e5", borderRadius: "4px", marginBottom: "16px" }} />
+                  <div style={{ width: "100%", height: "24px", background: "#e5e5e5", borderRadius: "4px", marginBottom: "12px" }} />
+                  <div style={{ width: "100%", height: "48px", background: "#e5e5e5", borderRadius: "4px" }} />
+                </div>
               </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div style={{ maxWidth: "450px", margin: "0 auto", padding: "40px 24px", background: "#ffffff", borderRadius: "12px", border: "1px solid rgba(139,26,26,0.15)", textAlign: "center" }}>
+            <h4 style={{ fontFamily: "var(--font-serif)", fontSize: "18px", color: "#8c1515", marginBottom: "10px" }}>Unable to load articles</h4>
+            <p style={{ fontSize: "14px", color: "#6E6B64", marginBottom: "20px" }}>{error}</p>
+            <button onClick={fetchFeaturedBlogs} style={{ background: "#8B1A1A", color: "#fff", border: "none", borderRadius: "4px", padding: "10px 20px", cursor: "pointer", fontSize: "12px", fontWeight: "bold", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+              <RefreshCw size={12} /> Retry
+            </button>
+          </div>
+        ) : activePosts.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "48px 0" }}>
+            <p className="section-subtitle">No featured articles are available at the moment.</p>
+          </div>
+        ) : (
+          <div className="blogs-grid">
+            {activePosts.map((post, index) => (
+              <div
+                key={post.id}
+                className="blogs-card blog-card group relative overflow-hidden rounded-[16px] transition-all duration-300 blogs-reveal-el"
+                style={{
+                  opacity: inView ? 1 : 0,
+                  transform: inView ? "translateY(0)" : "translateY(24px)",
+                  transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease",
+                  transitionDelay: inView ? `${index * 100}ms` : "0ms",
+                  boxShadow: "0 2px 12px rgba(61,61,58,0.04)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "#C9A96E";
+                  e.currentTarget.style.boxShadow = "0 0 0 1px #C9A96E, 0 12px 32px rgba(201,169,110,0.12)";
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(196, 151, 58, 0.15)";
+                  e.currentTarget.style.boxShadow = "0 2px 12px rgba(61,61,58,0.04)";
+                  e.currentTarget.style.transform = "translateY(0px)";
+                }}
+              >
+                {/* Card Image Wrapper */}
+                <div className="blog-card__image-wrapper">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="blog-card__image transition-transform duration-500 ease-out group-hover:scale-106"
+                  />
+                  
+                  {/* Specific stronger image grain layer */}
+                  <div
+                    className="absolute inset-0 pointer-events-none z-10 opacity-12"
+                    style={{
+                      filter: "url(#blogs-grain-noise)",
+                      mixBlendMode: "overlay",
+                    }}
+                  />
 
-              {/* Card Contents */}
-              <div className="blog-card__content">
-                {/* Category / Meta Text */}
-                <span className="blog-card__category">
-                  {post.category}
-                </span>
-
-                {/* Date + Read Time Row */}
-                <div className="blog-card__date-time">
-                  <span>{post.date}</span>
-                  <span className="blog-card__meta-separator" />
-                  <span>{post.readTime}</span>
+                  {/* Shimmer Sweeper Overlay */}
+                  <div className="blogs-card-shimmer absolute inset-0 z-20 pointer-events-none"
+                    style={{
+                      background: "linear-gradient(115deg, transparent 0%, rgba(201,169,110,0.25) 50%, transparent 100%)",
+                      width: "150%",
+                      transform: "translateX(-150%)",
+                    }}
+                  />
                 </div>
 
-                {/* Title */}
-                <h3 className="blog-card__title">
-                  {post.title}
-                </h3>
-
-                {/* Description */}
-                <p className="blog-card__excerpt">
-                  {post.description}
-                </p>
-
-                {/* Link */}
-                <Link
-                  href={post.href}
-                  className="blog-card__cta"
-                >
-                  READ MORE
-                  <span className="transition-transform duration-200 group-hover:translate-x-1.5">
-                    →
+                {/* Card Contents */}
+                <div className="blog-card__content">
+                  {/* Category / Meta Text */}
+                  <span className="blog-card__category">
+                    {post.category}
                   </span>
-                </Link>
+
+                  {/* Date + Read Time Row */}
+                  <div className="blog-card__date-time">
+                    <span>{post.date}</span>
+                    <span className="blog-card__meta-separator" />
+                    <span>{post.readTime}</span>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="blog-card__title">
+                    {post.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="blog-card__excerpt">
+                    {post.description}
+                  </p>
+
+                  {/* Link */}
+                  <Link
+                    href={post.href}
+                    className="blog-card__cta"
+                  >
+                    READ MORE
+                    <span className="transition-transform duration-200 group-hover:translate-x-1.5">
+                      →
+                    </span>
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* ── NEWSLETTER BAR ── */}
         <div

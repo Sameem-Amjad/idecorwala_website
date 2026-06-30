@@ -1,5 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { getActiveProducts, Product } from "@/lib/supabaseClient";
+
 type IconProps = {
   className?: string;
 };
@@ -332,6 +335,14 @@ function SelectField({
 }
 
 export default function FooterSection() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    getActiveProducts()
+      .then(setProducts)
+      .catch((err) => console.error("Error loading products for footer:", err));
+  }, []);
+
   return (
     <section className="rfp-footer-section" aria-label="RFP and contact footer">
       <style>{`
@@ -1816,10 +1827,22 @@ export default function FooterSection() {
               <span className="footer-col-header" id="footer-products-heading">Products</span>
               <span className="footer-header-underline" />
               <ul className="footer-link-list">
-                <li className="footer-link-item"><a href="/products/walls">Walls</a></li>
-                <li className="footer-link-item"><a href="/products/floors">Floors</a></li>
-                <li className="footer-link-item"><a href="/products/ceilings">Ceilings</a></li>
-                <li className="footer-link-item"><a href="/products/spaces">Spaces</a></li>
+                {products.length > 0 ? (
+                  Array.from(new Set(products.map((p) => p.category || "General"))).map((catName) => (
+                    <li className="footer-link-item" key={catName}>
+                      <a href={`/products#${catName.toLowerCase()}`}>
+                        {catName}
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <>
+                    <li className="footer-link-item"><a href="/products#walls">Walls</a></li>
+                    <li className="footer-link-item"><a href="/products#floors">Floors</a></li>
+                    <li className="footer-link-item"><a href="/products#ceilings">Ceilings</a></li>
+                    <li className="footer-link-item"><a href="/products#spaces">Spaces</a></li>
+                  </>
+                )}
               </ul>
             </nav>
 
