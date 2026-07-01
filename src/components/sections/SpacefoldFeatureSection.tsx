@@ -108,7 +108,7 @@ export default function SpacefoldFeatureSection() {
         }
       });
 
-      tl.fromTo(eyebrowRef.current, 
+      tl.fromTo(eyebrowRef.current,
         { opacity: 0, y: 15 },
         { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
       );
@@ -149,83 +149,83 @@ export default function SpacefoldFeatureSection() {
 
   return (
     <>
-    <section ref={sectionRef} id="spacefold-feature" className="spacefold-section" style={{
-  backgroundColor: "#0A0A0A",
-  minHeight: "100vh",
-  backgroundImage: `
+      <section ref={sectionRef} id="spacefold-feature" className="spacefold-section" style={{
+        backgroundColor: "#0A0A0A",
+        minHeight: "100vh",
+        backgroundImage: `
     radial-gradient(ellipse at 10% 0%, rgba(201, 168, 76, 0.15) 0%, transparent 40%),
     radial-gradient(ellipse at 90% 0%, rgba(201, 168, 76, 0.1) 0%, transparent 35%),
     radial-gradient(ellipse at 0% 100%, rgba(201, 168, 76, 0.1) 0%, transparent 40%),
     radial-gradient(ellipse at 100% 100%, rgba(201, 168, 76, 0.15) 0%, transparent 45%),
     url("https://www.transparenttextures.com/patterns/stardust.png")
   `
-}}>
-      {/* Cinematic Grain Overlay */}
-      <div className="spacefold-grain" aria-hidden="true" />
+      }}>
+        {/* Cinematic Grain Overlay */}
+        <div className="spacefold-grain" aria-hidden="true" />
 
-      {/* Gold & Moss Glow Ambient Backdrops */}
-      <div className="spacefold-ambient-glow" aria-hidden="true">
-        <div className="glow-emerald" />
-        <div className="glow-gold" />
-      </div>
-      {/* Top Brush Stroke Wave (Gold) */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none opacity-100">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[60px]">
-          <path d="M0,0 C150,90 350,120 600,60 C850,0 1050,30 1200,90 L1200,0 L0,0 Z" fill="url(#goldGrad)"></path>
-          <defs>
-            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#c9a45d" />
-              <stop offset="50%" stopColor="#e5c880" />
-              <stop offset="100%" stopColor="#a57a34" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+        {/* Gold & Moss Glow Ambient Backdrops */}
+        <div className="spacefold-ambient-glow" aria-hidden="true">
+          <div className="glow-emerald" />
+          <div className="glow-gold" />
+        </div>
+        {/* Top Brush Stroke Wave (Gold) */}
+        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none opacity-100">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[60px]">
+            <path d="M0,0 C150,90 350,120 600,60 C850,0 1050,30 1200,90 L1200,0 L0,0 Z" fill="url(#goldGrad)"></path>
+            <defs>
+              <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#c9a45d" />
+                <stop offset="50%" stopColor="#e5c880" />
+                <stop offset="100%" stopColor="#a57a34" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
 
-      {/* Bottom Brush Stroke Wave (Gold) */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none opacity-100">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[60px] transform rotate-180">
-          <path d="M0,0 C150,90 350,120 600,60 C850,0 1050,30 1200,90 L1200,0 L0,0 Z" fill="url(#goldGrad)"></path>
-        </svg>
-      </div>
+        {/* Bottom Brush Stroke Wave (Gold) */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-10 pointer-events-none opacity-100">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[60px] transform rotate-180">
+            <path d="M0,0 C150,90 350,120 600,60 C850,0 1050,30 1200,90 L1200,0 L0,0 Z" fill="url(#goldGrad)"></path>
+          </svg>
+        </div>
 
-      <div className="spacefold-container">
-        <div className="gold-strip absolute top-0 left-0 w-full h-12 bg-gradient-to-r from-gold-start to-gold-end opacity-10 pointer-events-none"></div>          {/* Header */}
+        <div className="spacefold-container">
+          <div className="gold-strip absolute top-0 left-0 w-full h-12 bg-gradient-to-r from-gold-start to-gold-end opacity-10 pointer-events-none"></div>          {/* Header */}
           <div className="spacefold-header px-4" ref={headerRef}>
-              {/* Eyebrow line */}
-                <div className="eyebrow flex items-center justify-center text-sm mb-4" ref={eyebrowRef}>
-                  <span className="dot hidden sm:inline-block text-[#c9a45d] mr-1">•</span>
-                  <span className="line hidden sm:inline-block w-10 h-px bg-gradient-to-r from-transparent to-[#c9a45d] mx-2"></span>
-                  <span className="uppercase tracking-widest eyebrow-groove text-[10px] sm:text-xs text-center font-bold">THE NEXT FRONTIER OF SPATIAL TECH</span>
-                  <span className="line hidden sm:inline-block w-10 h-px bg-gradient-to-l from-transparent to-[#c9a45d] mx-2"></span>
-                  <span className="dot hidden sm:inline-block text-[#c9a45d] ml-1">•</span>
-                </div>
-
-              {/* Headline */}
-
-              <h2 className="spacefold-title text-4xl font-bold text-center mb-6" ref={headlineRef}>
-                  <span className="block text-white headline-groove-silver">SEE IT. FEEL IT.</span>
-                  <span className="block text-gold headline-groove-gold my-2 lowercase italic tracking-wide text-[0.85em] font-serif normal-case">then</span>
-                  <span className="block text-gold headline-groove-gold">WE BUILT IT</span>
-              </h2>
-
-              {/* Subheadline */}
-              <p className="spacefold-subtitle text-center subtitle-groove max-w-2xl mx-auto px-4" ref={subheadlineRef}>
-                Our proprietary technology transforms imagination into immersive reality — so every decision is confident, every outcome is certain.
-              </p>
-
-              <div className="flex justify-center" style={{ marginTop: "24px", marginBottom: "24px" }}>
-                <img 
-                  src="/spacefold-icon.png"
-                  alt="Spacefold Logo"
-                  className="w-auto object-contain drop-shadow-[0_0_16px_rgba(201,168,76,0.4)]"
-                  style={{ height: "120px" }}
-                />
-              </div>
-
+            {/* Eyebrow line */}
+            <div className="eyebrow flex items-center justify-center text-sm mb-4" ref={eyebrowRef}>
+              <span className="dot hidden sm:inline-block text-[#c9a45d] mr-1">•</span>
+              <span className="line hidden sm:inline-block w-10 h-px bg-gradient-to-r from-transparent to-[#c9a45d] mx-2"></span>
+              <span className="uppercase tracking-widest eyebrow-groove text-[10px] sm:text-xs text-center font-bold">THE NEXT FRONTIER OF SPATIAL TECH</span>
+              <span className="line hidden sm:inline-block w-10 h-px bg-gradient-to-l from-transparent to-[#c9a45d] mx-2"></span>
+              <span className="dot hidden sm:inline-block text-[#c9a45d] ml-1">•</span>
             </div>
+
+            {/* Headline */}
+
+            <h2 className="spacefold-title text-4xl font-bold text-center" ref={headlineRef}>
+              <span className="block text-white headline-groove-silver">SEE IT. FEEL IT.</span>
+              <span className="block text-gold headline-groove-gold my-2 lowercase italic tracking-wide text-[0.85em] font-serif normal-case">then</span>
+              <span className="block text-gold headline-groove-gold">WE BUILT IT</span>
+            </h2>
+
+            {/* Subheadline */}
+            <p className="spacefold-subtitle text-center subtitle-groove max-w-2xl mx-auto" ref={subheadlineRef}>
+              Our proprietary technology transforms imagination into immersive reality — so every decision is confident, every outcome is certain.
+            </p>
+
+            <div className="flex justify-center">
+              <img
+                src="/spacefold/spacefold-logo.png"
+                alt="Spacefold Logo"
+                className="w-auto object-contain drop-shadow-[0_0_16px_rgba(201,168,76,0.4)]"
+                style={{ height: "100px" }}
+              />
+            </div>
+
+          </div>
           {/* Process Cards */}
-        <div className="spacefold-process flex justify-center items-start gap-4 overflow-x-auto">
+          <div className="spacefold-process flex justify-center items-start gap-4 overflow-x-auto">
 
             {/* Card 01 – VISUALIZE (Gamified Visualization) */}
             <div className="process-card-wrapper">
@@ -333,34 +333,34 @@ export default function SpacefoldFeatureSection() {
               </div>
             </div>
 
+          </div>
+          {/* Metrics Strip */}            <div className="spacefold-metrics flex justify-around items-center w-full max-w-[860px] mx-auto mt-12 bg-[#161513]/60 border border-gold rounded-lg p-4 backdrop-blur-md">
+            <div className="metric-item flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:filter drop-shadow-[0_0_8px_rgba(201,168,76,0.3)] cursor-default">
+              <Box className="metric-icon mb-1 text-gold w-6 h-6" />
+              <div className="metric-value text-2xl font-bold text-gold">1.5L+</div>
+              <div className="metric-label text-sm text-gray-400">Product SKUs</div>
             </div>
-            {/* Metrics Strip */}            <div className="spacefold-metrics flex justify-around items-center w-full max-w-[860px] mx-auto mt-12 bg-[#161513]/60 border border-gold rounded-lg p-4 backdrop-blur-md">
-              <div className="metric-item flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:filter drop-shadow-[0_0_8px_rgba(201,168,76,0.3)] cursor-default">
-                <Box className="metric-icon mb-1 text-gold w-6 h-6" />
-                <div className="metric-value text-2xl font-bold text-gold">1.5L+</div>
-                <div className="metric-label text-sm text-gray-400">Product SKUs</div>
-              </div>
-              <div className="hidden sm:block border-r border-gold/40 h-8 self-center"></div>
-              <div className="metric-item flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:filter drop-shadow-[0_0_8px_rgba(201,168,76,0.3)] cursor-default">
-                <Cpu className="metric-icon mb-1 text-gold w-6 h-6" />
-                <div className="metric-value text-2xl font-bold text-gold">AI/AR/VR</div>
-                <div className="metric-label text-sm text-gray-400">Powered Platform</div>
-              </div>
-              <div className="hidden sm:block border-r border-gold/40 h-8 self-center"></div>
-              <div className="metric-item flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:filter drop-shadow-[0_0_8px_rgba(201,168,76,0.3)] cursor-default">
-                <Timer className="metric-icon mb-1 text-gold w-6 h-6" />
-                <div className="metric-value text-2xl font-bold text-gold">30%</div>
-                <div className="metric-label text-sm text-gray-400">Less Time to Execution</div>
-              </div>
-              <div className="hidden sm:block border-r border-gold/40 h-8 self-center"></div>
-              <div className="metric-item flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:filter drop-shadow-[0_0_8px_rgba(201,168,76,0.3)] cursor-default">
-                <ShieldCheck className="metric-icon mb-1 text-gold w-6 h-6" />
-                <div className="metric-value text-2xl font-bold text-gold">100%</div>
-                <div className="metric-label text-sm text-gray-400">Quality Assured</div>
-              </div>
-            </div>  {/* CTA Button */}
+            <div className="hidden sm:block border-r border-gold/40 h-8 self-center"></div>
+            <div className="metric-item flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:filter drop-shadow-[0_0_8px_rgba(201,168,76,0.3)] cursor-default">
+              <Cpu className="metric-icon mb-1 text-gold w-6 h-6" />
+              <div className="metric-value text-2xl font-bold text-gold">AI/AR/VR</div>
+              <div className="metric-label text-sm text-gray-400">Powered Platform</div>
+            </div>
+            <div className="hidden sm:block border-r border-gold/40 h-8 self-center"></div>
+            <div className="metric-item flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:filter drop-shadow-[0_0_8px_rgba(201,168,76,0.3)] cursor-default">
+              <Timer className="metric-icon mb-1 text-gold w-6 h-6" />
+              <div className="metric-value text-2xl font-bold text-gold">30%</div>
+              <div className="metric-label text-sm text-gray-400">Less Time to Execution</div>
+            </div>
+            <div className="hidden sm:block border-r border-gold/40 h-8 self-center"></div>
+            <div className="metric-item flex flex-col items-center text-center transition-all duration-300 hover:scale-105 hover:filter drop-shadow-[0_0_8px_rgba(201,168,76,0.3)] cursor-default">
+              <ShieldCheck className="metric-icon mb-1 text-gold w-6 h-6" />
+              <div className="metric-value text-2xl font-bold text-gold">100%</div>
+              <div className="metric-label text-sm text-gray-400">Quality Assured</div>
+            </div>
+          </div>  {/* CTA Button */}
           <div className="spacefold-cta mt-12">
-              <button className="cta-button bg-gradient-to-r from-gold-start to-gold-end text-black font-medium px-6 py-3 rounded-full hover:opacity-90 transition-opacity">
+            <button className="cta-button bg-gradient-to-r from-gold-start to-gold-end text-black font-medium px-6 py-3 rounded-full hover:opacity-90 transition-opacity">
               SCHEDULE A LIVE SPACEFOLD DEMO →
             </button>
           </div>

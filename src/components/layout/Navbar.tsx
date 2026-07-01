@@ -20,7 +20,7 @@ import {
   Cpu
 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { getActiveProducts } from "@/lib/supabaseClient";
+import { getActiveProducts, getProductCategories, ProductCategory, Product } from "@/lib/supabaseClient";
 console.log("[Navbar] Initializing Navbar component...");
 import { useMemo } from "react";
 
@@ -118,67 +118,56 @@ export default function Navbar() {
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const [openMobileSubGroup, setOpenMobileSubGroup] = useState<string | null>(null);
   const [isHeadlineActive, setIsHeadlineActive] = useState(false);
-  const [dbProducts, setDbProducts] = useState<any[]>([]);
+  const [dbCategories, setDbCategories] = useState<ProductCategory[]>([]);
+  const [dbProducts, setDbProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    console.log("[Navbar] Fetching products from Supabase...");
-    getActiveProducts()
-      .then((data) => {
-        console.log("[Navbar] Successfully fetched products count:", data.length, "Categories:", Array.from(new Set(data.map((p: any) => p.category))));
-        setDbProducts(data);
+    console.log("[Navbar] Fetching categories and products from Supabase...");
+    Promise.all([getProductCategories(), getActiveProducts()])
+      .then(([categoriesData, productsData]) => {
+        setDbCategories(categoriesData);
+        setDbProducts(productsData);
       })
       .catch((err) => {
-        console.error("[Navbar] Error loading products for navbar:", err);
+        console.error("[Navbar] Error loading navbar data:", err);
       });
   }, []);
 
   const dynamicProductsLinks = useMemo(() => {
-    if (!dbProducts || dbProducts.length === 0) {
-      console.log("[Navbar] No products fetched, using static fallback navigation.");
+    if (!dbCategories || dbCategories.length === 0) {
+      console.log("[Navbar] No categories fetched, using static fallback navigation.");
       return [
         {
           label: "Walls",
-          href: "/products#walls",
+          href: "/products/walls",
           subItems: [
-            { label: "Wallpaper", href: "/products" },
-            { label: "Wall Murals", href: "/products" },
-            { label: "Wall Art & Decals", href: "/products" }
+            { label: "Wallpaper", href: "/products/walls" },
+            { label: "Wall Murals", href: "/products/walls" }
           ]
         },
         {
           label: "Floors",
-          href: "/products#floor",
+          href: "/products/floor",
           subItems: [
-            { label: "Wood", href: "/products" },
-            { label: "Vinyl", href: "/products" }
+            { label: "Wood", href: "/products/floor" },
+            { label: "Vinyl", href: "/products/floor" }
           ]
         }
       ];
     }
-    
-    const categoriesMap: { [key: string]: { order: number; items: any[] } } = {};
-    dbProducts.forEach((p) => {
-      const cat = p.category || "General";
-      if (!categoriesMap[cat]) {
-        categoriesMap[cat] = {
-          order: p.category_order || 99,
-          items: []
-        };
-      }
-      categoriesMap[cat].items.push({
-        label: p.name,
-        href: p.redirect_url
-      });
-    });
 
-    return Object.entries(categoriesMap)
-      .sort((a, b) => a[1].order - b[1].order)
-      .map(([catName, data]) => ({
-        label: catName,
-        href: `/products#${catName.toLowerCase()}`,
-        subItems: data.items
-      }));
-  }, [dbProducts]);
+    return dbCategories.map((category) => {
+      const categoryProducts = dbProducts.filter((p) => String(p.category_id) === String(category.id));
+      return {
+        label: category.name,
+        href: `/products/${category.slug}`,
+        subItems: categoryProducts.map((p) => ({
+          label: p.name,
+          href: p.redirect_url
+        }))
+      };
+    });
+  }, [dbCategories, dbProducts]);
 
   const navDropdowns = useMemo(() => {
     return NAV_DROPDOWNS.map((dropdown) => {

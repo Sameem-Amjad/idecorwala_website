@@ -311,40 +311,23 @@ export default function SpacefoldPage() {
               </div>
             </div>
 
-            {/* Right — Octagon preview (desktop only) */}
-            <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", minHeight: "420px", position: "relative" }} className="sf-hero-right">
-              <div style={{ position: "relative", width: "min(460px, 100%)", height: "370px", padding: "1.5px", background: "linear-gradient(135deg, rgba(212,175,55,0.65) 0%, rgba(212,175,55,0.06) 50%, rgba(212,175,55,0.5) 100%)", clipPath: "polygon(34px 0, calc(100% - 34px) 0, 100% 34px, 100% calc(100% - 34px), calc(100% - 34px) 100%, 34px 100%, 0 calc(100% - 34px), 0 34px)", boxShadow: "0 40px 100px rgba(0,0,0,0.55)" }}>
-                <div style={{ position: "absolute", inset: "1.5px", clipPath: "polygon(34px 0, calc(100% - 34px) 0, 100% 34px, 100% calc(100% - 34px), calc(100% - 34px) 100%, 34px 100%, 0 calc(100% - 34px), 0 34px)", background: "radial-gradient(circle at 50% 40%, #1c1916 0%, #100e0c 55%, #080706 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                  <svg viewBox="0 0 460 370" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.2, pointerEvents: "none" }} stroke="rgba(212,175,55,0.45)" strokeWidth="0.7" fill="none">
-                    <line x1="230" y1="185" x2="-60" y2="-50" /><line x1="230" y1="185" x2="520" y2="-50" />
-                    <line x1="230" y1="185" x2="520" y2="420" /><line x1="230" y1="185" x2="-60" y2="420" />
-                    <line x1="230" y1="185" x2="230" y2="-60" /><line x1="230" y1="185" x2="230" y2="430" />
-                    <line x1="230" y1="185" x2="-60" y2="185" /><line x1="230" y1="185" x2="520" y2="185" />
-                    <ellipse cx="230" cy="185" rx="85" ry="60" /><ellipse cx="230" cy="185" rx="145" ry="102" /><ellipse cx="230" cy="185" rx="210" ry="148" />
-                  </svg>
-                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" style={{ position: "relative", zIndex: 10, marginBottom: "20px", filter: "drop-shadow(0 0 14px rgba(212,175,55,0.7))" }}>
-                    <path d="M20 5 L33 12.5 L33 27.5 L20 35 L7 27.5 L7 12.5 Z" stroke={COLORS.gold} strokeWidth="1.3" fill="rgba(212,175,55,0.04)" />
-                    <path d="M20 5 L20 35 M7 12.5 L33 27.5 M33 12.5 L7 27.5" stroke={COLORS.gold} strokeWidth="0.6" strokeOpacity="0.4" />
-                  </svg>
-                  <div style={{ position: "relative", zIndex: 10, textAlign: "center" }}>
-                    <p style={{ fontFamily: FONTS.body, fontSize: "11px", color: COLORS.gold, letterSpacing: "0.32em", fontWeight: 600, textTransform: "uppercase", marginBottom: "6px" }}>3D SCROLL EXPERIENCE</p>
-                    <p style={{ fontFamily: FONTS.body, fontSize: "10px", letterSpacing: "0.22em", color: "rgba(255,255,255,0.35)" }}>( 3D VISUAL SPACE )</p>
-                  </div>
+            {/* Right — Main Video & Floating Previews (desktop only) */}
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "560px", position: "relative" }} className="sf-hero-right">
+              {/* Primary Video Container */}
+              <div style={{ position: "relative", width: "100%", maxWidth: "660px", height: "400px", padding: "2px", background: "linear-gradient(135deg, rgba(212,175,55,0.7) 0%, rgba(212,175,55,0.1) 50%, rgba(212,175,55,0.5) 100%)", borderRadius: "20px", boxShadow: "0 35px 80px rgba(0,0,0,0.65)" }}>
+                <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "18px", background: "#080706", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                  <video
+                    src="/spacefold/spacefold-video.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 1, filter: "brightness(1.25) contrast(1.05)" }}
+                  />
                   {[{t:"top",l:"left"},{t:"top",l:"right"},{t:"bottom",l:"left"},{t:"bottom",l:"right"}].map((c,i) => (
-                    <div key={i} style={{ position: "absolute", [c.t]: 20, [c.l]: 20, width: 24, height: 24, borderTop: c.t === "top" ? "1px solid rgba(212,175,55,0.5)" : undefined, borderBottom: c.t === "bottom" ? "1px solid rgba(212,175,55,0.5)" : undefined, borderLeft: c.l === "left" ? "1px solid rgba(212,175,55,0.5)" : undefined, borderRight: c.l === "right" ? "1px solid rgba(212,175,55,0.5)" : undefined }} />
+                    <div key={i} style={{ position: "absolute", [c.t]: 16, [c.l]: 16, width: 20, height: 20, borderTop: c.t === "top" ? "1px solid rgba(212,175,55,0.6)" : undefined, borderBottom: c.t === "bottom" ? "1px solid rgba(212,175,55,0.6)" : undefined, borderLeft: c.l === "left" ? "1px solid rgba(212,175,55,0.6)" : undefined, borderRight: c.l === "right" ? "1px solid rgba(212,175,55,0.6)" : undefined }} />
                   ))}
                 </div>
-              </div>
-              {/* IDDA card */}
-              <div style={{ position: "absolute", bottom: "10px", left: "0", maxWidth: "290px", display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px", borderRadius: "16px", background: "linear-gradient(135deg, rgba(16,13,10,0.97) 0%, rgba(24,19,14,0.94) 100%)", border: "1px solid rgba(212,175,55,0.22)", boxShadow: "0 12px 40px rgba(0,0,0,0.55)", backdropFilter: "blur(20px)", zIndex: 20 }}>
-                <div style={{ width: 44, height: 44, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "radial-gradient(circle at 35% 35%, #FF5522 0%, #C41800 50%, #6B0800 100%)", boxShadow: "0 0 20px rgba(196,24,0,0.75)", fontFamily: FONTS.display, fontWeight: 700, fontSize: "11px", letterSpacing: "0.1em", color: "#FFD4B8" }}>IDDA</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontFamily: FONTS.body, fontSize: "10px", fontWeight: 700, color: "#fff", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.3, margin: 0 }}>IDDA – IDECORWALA</p>
-                  <p style={{ fontFamily: FONTS.body, fontSize: "9px", letterSpacing: "0.08em", color: "rgba(212,175,55,0.65)", textTransform: "uppercase", marginTop: "3px", marginBottom: 0 }}>Digital Design Assistant</p>
-                </div>
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                  <path d="M8 1L9.2 6.8L15 8L9.2 9.2L8 15L6.8 9.2L1 8L6.8 6.8Z" fill={COLORS.gold} opacity="0.85" />
-                </svg>
               </div>
             </div>
           </div>
@@ -385,7 +368,7 @@ export default function SpacefoldPage() {
               {[
                 { metric: "90%", label: "Faster\nDesign Creation" },
                 { metric: "25%", label: "Average Cost\nOptimization" },
-                { metric: "10,000+", label: "Products & Materials\nAt Your Fingertips" },
+                { metric: "1,50,000+", label: "Products & Materials\nAt Your Fingertips" },
                 { metric: "100%", label: "Manufacturing\nReady Outputs" },
                 { metric: "1 Platform", label: "Design to Execution\nEnd-to-End" },
               ].map((k) => (
@@ -542,21 +525,21 @@ export default function SpacefoldPage() {
         {/* ═══════════════════════════════════════════
             IDDA AI SECTION
         ═══════════════════════════════════════════ */}
-        <section style={{ position: "relative", width: "100%", background: COLORS.dark, zIndex: 30, overflow: "hidden" }}>
+        <section id="idda-section" style={{ position: "relative", width: "100%", background: COLORS.dark, zIndex: 30, overflow: "hidden" }}>
           <div className="sf-noise-overlay" />
           <div style={{ position: "absolute", left: "-5%", top: "50%", transform: "translateY(-50%)", width: "500px", height: "500px", background: "radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%)", filter: "blur(60px)", pointerEvents: "none" }} />
 
           <div style={{ position: "relative", zIndex: 10, maxWidth: "1440px", margin: "0 auto", padding: "96px clamp(24px, 4vw, 96px)", display: "flex", gap: "64px", alignItems: "center" }} className="sf-idda-grid">
-            {/* Ring system */}
+            {/* IDDA GIF Circle */}
             <div style={{ flex: "0 0 auto", width: "min(360px, 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div style={{ position: "relative", width: "320px", height: "320px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1px solid rgba(212,175,55,0.25)" }} />
-                <div className="sf-spin-slow" style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1px dashed rgba(212,175,55,0.65)" }} />
-                <div className="sf-spin-slow-rev" style={{ position: "absolute", inset: "18px", borderRadius: "50%", border: "1px dotted rgba(212,175,55,0.3)" }} />
-                <div style={{ position: "absolute", inset: "36px", borderRadius: "50%", boxShadow: "0 0 60px rgba(106,4,15,0.8), inset 0 0 40px rgba(106,4,15,0.4)" }} />
-                <div style={{ position: "absolute", inset: 0, borderRadius: "50%", boxShadow: "0 0 60px rgba(212,175,55,0.2), 0 0 120px rgba(106,4,15,0.3)" }} />
-                <div style={{ position: "relative", zIndex: 10, width: "120px", height: "120px", background: COLORS.dark, border: "1px solid rgba(212,175,55,0.5)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 0 30px rgba(106,4,15,0.8), 0 0 20px rgba(212,175,55,0.3)" }}>
-                  <span style={{ fontFamily: FONTS.body, fontWeight: 700, fontSize: "24px", color: "#fff", letterSpacing: "0.15em" }}>IDDA</span>
+              <div style={{ position: "relative", width: "260px", height: "260px", borderRadius: "50%", border: "2.5px solid rgba(212,175,55,0.7)", boxShadow: "0 15px 40px rgba(212,175,55,0.15), 0 0 30px rgba(212,175,55,0.25)", overflow: "hidden" }}>
+                <img
+                  src="/spacefold/spacefold-gif.gif"
+                  alt="IDDA AI Processing Demo"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.9 }}
+                />
+                <div style={{ position: "absolute", inset: 0, background: "rgba(11,10,9,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontFamily: FONTS.body, fontWeight: 800, fontSize: "18px", color: "#fff", letterSpacing: "0.18em", textShadow: "0 2px 12px rgba(0,0,0,0.85)" }}>IDDA</span>
                 </div>
               </div>
             </div>

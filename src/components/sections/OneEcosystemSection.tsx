@@ -156,6 +156,8 @@ export default function OneEcosystemSection() {
       style={{
         backgroundColor: "#090909",
         minHeight: "100vh",
+        paddingLeft: "clamp(24px, 4vw, 64px)",
+        paddingRight: "clamp(24px, 4vw, 64px)",
         backgroundImage: `
           /* Bottom-right soft gold light streak only */
           radial-gradient(ellipse at 100% 100%, rgba(201, 168, 76, 0.12) 0%, transparent 60%),
@@ -170,12 +172,12 @@ export default function OneEcosystemSection() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
-        className="w-full max-w-[1440px] mx-auto px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24 relative z-30 flex flex-col xl:flex-row items-stretch justify-between gap-12 xl:gap-16"
+        className="w-full max-w-[1440px] mx-auto relative z-30 flex flex-col xl:flex-row items-stretch justify-between gap-10 xl:gap-12"
       >
         {/* Left Column - Perfectly aligned and spaced */}
         <motion.div
           variants={elementVariants}
-          className="w-full xl:w-[30%] flex flex-col justify-center items-center xl:items-start text-center xl:text-left self-center"
+          className="w-full xl:w-[26%] flex-shrink-0 flex flex-col justify-center items-center xl:items-start text-center xl:text-left self-center"
         >
           {/* Eyebrow Label */}
           <div className="flex items-center gap-3 mb-8 xl:self-start justify-center xl:justify-start">
@@ -186,7 +188,7 @@ export default function OneEcosystemSection() {
           </div>
 
           {/* Headline (48px on desktop, elegantly scaled down on mobile) */}
-          <h2 className="font-serif text-[24px] sm:text-[34px] xl:text-[48px] leading-[1.15] tracking-wide mb-4 sm:mb-8 select-none text-center xl:text-left flex flex-col gap-1 sm:gap-1.5 font-bold">
+          <h2 className="font-serif text-[24px] sm:text-[34px] xl:text-[36px] leading-[1.15] tracking-wide mb-4 sm:mb-8 select-none text-center xl:text-left flex flex-col gap-1 sm:gap-1.5 font-bold">
             <span className="block ecosystem-header-silver">DESIGN.</span>
             <span className="block ecosystem-header-silver">TECHNOLOGY.</span>
             <span className="block ecosystem-header-silver">MANUFACTURING.</span>
@@ -235,7 +237,7 @@ export default function OneEcosystemSection() {
         </motion.div>
 
         {/* Right Column - Beautiful spacing and clear limits */}
-        <div className="w-full xl:w-[62%] flex flex-col gap-8 justify-center">
+        <div className="flex-1 min-w-0 flex flex-col gap-8 justify-center">
 
           {/* Ecosystem Cards - Grid with comfortable margins */}
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 justify-items-center gap-x-3 gap-y-8 sm:gap-6 relative z-10">

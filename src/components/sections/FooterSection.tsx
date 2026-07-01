@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getActiveProducts, Product } from "@/lib/supabaseClient";
+import { getProductCategories, ProductCategory } from "@/lib/supabaseClient";
 
 type IconProps = {
   className?: string;
@@ -335,12 +335,12 @@ function SelectField({
 }
 
 export default function FooterSection() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
 
   useEffect(() => {
-    getActiveProducts()
-      .then(setProducts)
-      .catch((err) => console.error("Error loading products for footer:", err));
+    getProductCategories()
+      .then(setCategories)
+      .catch((err) => console.error("Error loading categories for footer:", err));
   }, []);
 
   return (
@@ -1816,8 +1816,6 @@ export default function FooterSection() {
               <ul className="footer-link-list">
                 <li className="footer-link-item"><a href="/services/design-architecture">Design &amp; Architecture</a></li>
                 <li className="footer-link-item"><a href="/services/civil-structural-facade">Civil &amp; Structural &amp; Facade</a></li>
-                <li className="footer-link-item"><a href="#">MEP / HVAC</a></li>
-                <li className="footer-link-item"><a href="#">EPC</a></li>
                 <li className="footer-link-item"><a href="/services/interiors-fitouts">Interiors &amp; Fitouts</a></li>
               </ul>
             </nav>
@@ -1827,20 +1825,20 @@ export default function FooterSection() {
               <span className="footer-col-header" id="footer-products-heading">Products</span>
               <span className="footer-header-underline" />
               <ul className="footer-link-list">
-                {products.length > 0 ? (
-                  Array.from(new Set(products.map((p) => p.category || "General"))).map((catName) => (
-                    <li className="footer-link-item" key={catName}>
-                      <a href={`/products#${catName.toLowerCase()}`}>
-                        {catName}
+                {categories.length > 0 ? (
+                  categories.map((cat) => (
+                    <li className="footer-link-item" key={cat.id}>
+                      <a href={`/products/${cat.slug}`}>
+                        {cat.name}
                       </a>
                     </li>
                   ))
                 ) : (
                   <>
-                    <li className="footer-link-item"><a href="/products#walls">Walls</a></li>
-                    <li className="footer-link-item"><a href="/products#floors">Floors</a></li>
-                    <li className="footer-link-item"><a href="/products#ceilings">Ceilings</a></li>
-                    <li className="footer-link-item"><a href="/products#spaces">Spaces</a></li>
+                    <li className="footer-link-item"><a href="/products/walls">Walls</a></li>
+                    <li className="footer-link-item"><a href="/products/floor">Floors</a></li>
+                    <li className="footer-link-item"><a href="/products/ceiling">Ceilings</a></li>
+                    <li className="footer-link-item"><a href="/products/space">Spaces</a></li>
                   </>
                 )}
               </ul>
@@ -1852,8 +1850,7 @@ export default function FooterSection() {
               <span className="footer-header-underline" />
               <ul className="footer-link-list">
                 <li className="footer-link-item"><a href="/technology/spacefold">Spacefold AI</a></li>
-                <li className="footer-link-item"><a href="/technology/idda-assistant">IDDA Assistant</a></li>
-                <li className="footer-link-item"><a href="/technology/cad-cam">CAD to CAM Pipeline</a></li>
+                <li className="footer-link-item"><a href="/technology/spacefold#idda-section">IDDA Assistant</a></li>
               </ul>
             </nav>
 

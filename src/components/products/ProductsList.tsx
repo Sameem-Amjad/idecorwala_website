@@ -1,69 +1,44 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
-import { ArrowRight, RefreshCw, Layers } from "lucide-react";
-import { getActiveProducts, Product } from "@/lib/supabaseClient";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ArrowRight, RefreshCw } from "lucide-react";
+import { getProductCategories, ProductCategory } from "@/lib/supabaseClient";
 import styles from "./ProductsPage.module.css";
 
 export default function ProductsList() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProducts = async () => {
+  const fetchCategories = async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getActiveProducts();
-      setProducts(data);
+      const data = await getProductCategories();
+      setCategories(data);
     } catch (err: any) {
-      setError(err.message || "Failed to load products from database.");
+      setError(err.message || "Failed to load categories from database.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchCategories();
   }, []);
-
-  // Group and memoize active products by category field
-  const groupedProducts = useMemo(() => {
-    const groups: { [key: string]: Product[] } = {};
-    
-    // Sort products by category_order, then display_order
-    const sorted = [...products].sort((a, b) => {
-      if (a.category_order !== b.category_order) {
-        return a.category_order - b.category_order;
-      }
-      return a.display_order - b.display_order;
-    });
-
-    sorted.forEach((product) => {
-      const cat = product.category || "General";
-      if (!groups[cat]) {
-        groups[cat] = [];
-      }
-      groups[cat].push(product);
-    });
-
-    return groups;
-  }, [products]);
 
   if (loading) {
     return (
       <div className={styles.container}>
         <div className={styles.sectionsContainer}>
-          {[1, 2].map((i) => (
-            <div key={i} className={styles.categorySection}>
-              <div className={styles.skeletonHeading} />
-              <div className={styles.productsGrid}>
-                {[1, 2, 3].map((j) => (
-                  <div key={j} className={styles.skeletonCard} />
-                ))}
-              </div>
+          <div className={styles.categorySection}>
+            <div className={styles.productsGrid}>
+              {[1, 2, 3, 4].map((j) => (
+                <div key={j} className={styles.skeletonCard} style={{ height: "130px" }} />
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     );
@@ -73,9 +48,9 @@ export default function ProductsList() {
     return (
       <div className={styles.container}>
         <div className={styles.stateContainer}>
-          <h3 className={styles.stateTitle}>Unable to Load Products</h3>
+          <h3 className={styles.stateTitle}>Unable to Load Categories</h3>
           <p className={styles.stateText}>{error}</p>
-          <button onClick={fetchProducts} className={styles.retryButton}>
+          <button onClick={fetchCategories} className={styles.retryButton}>
             <RefreshCw size={14} />
             Retry
           </button>
@@ -84,12 +59,12 @@ export default function ProductsList() {
     );
   }
 
-  if (products.length === 0) {
+  if (categories.length === 0) {
     return (
       <div className={styles.container}>
         <div className={styles.stateContainer}>
-          <h3 className={styles.stateTitle}>No Products Available</h3>
-          <p className={styles.stateText}>No products are currently available.</p>
+          <h3 className={styles.stateTitle}>No Categories Available</h3>
+          <p className={styles.stateText}>No product categories are currently available.</p>
         </div>
       </div>
     );
@@ -98,35 +73,30 @@ export default function ProductsList() {
   return (
     <div className={styles.container}>
       <div className={styles.sectionsContainer}>
-        {Object.entries(groupedProducts).map(([category, items]) => (
-          <section key={category} id={category.toLowerCase()} className={styles.categorySection}>
-            <div className={styles.categoryHeading}>
-              <h2 className={styles.categoryTitle}>{category}</h2>
-              <div className={styles.categorySeparator} />
-            </div>
-            
-            {items.length === 0 ? (
-              <p className={styles.stateText}>No products are available in this category.</p>
-            ) : (
-              <div className={styles.productsGrid}>
-                {items.map((product) => (
-                  <a
-                    key={product.id}
-                    href={product.redirect_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.productCard}
-                  >
-                    <div className={styles.productInfo}>
-                      <span className={styles.productName}>{product.name}</span>
-                    </div>
-                    <ArrowRight size={18} className={styles.arrowIcon} />
-                  </a>
-                ))}
-              </div>
-            )}
-          </section>
-        ))}
+        <section className={styles.categorySection}>
+          <div className={styles.productsGrid}>
+            {categories.map((category) => (
+              <Link
+                key={category.id}
+                href={`/products/${category.slug}`}
+                className={styles.productCard}
+                style={{ display: "flex", flexDirection: "row", alignItems: "center", minHeight: "120px", padding: "24px" }}
+              >
+                <div className={styles.productInfo} style={{ flexGrow: 1, paddingRight: "16px" }}>
+                  <span className={styles.productName} style={{ fontSize: "18px", fontWeight: 700, color: "#1b1714" }}>
+                    {category.name}
+                  </span>
+                  {category.description && (
+                    <p style={{ fontSize: "13px", color: "#625b52", marginTop: "6px", lineHeight: "1.45" }}>
+                      {category.description}
+                    </p>
+                  )}
+                </div>
+                <ArrowRight size={20} className={styles.arrowIcon} style={{ flexShrink: 0 }} />
+              </Link>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

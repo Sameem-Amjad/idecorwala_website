@@ -46,10 +46,11 @@ const ARCHES = [
   },
   {
     num: "05",
-    title: "GRAVITY",
+    title: "EXPERIENCE",
     image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600",
     categories: ["EPC Delivery", "Civil & Structural", "MEP Infrastructure", "HVAC Engineering", "Turnkey Interiors"],
     factor: 40,
+    icon: "/experience-logo.png"
   },
   {
     num: "06",
