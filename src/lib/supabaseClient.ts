@@ -32,6 +32,63 @@ export interface Product {
   product_categories?: ProductCategory;
 }
 
+export interface HeadingBlock {
+  type: "heading";
+  level: number;
+  text: string;
+}
+
+export interface ParagraphBlock {
+  type: "paragraph";
+  text: string;
+}
+
+export interface BulletListBlock {
+  type: "bullet_list";
+  items: string[];
+}
+
+export interface NumberedListBlock {
+  type: "numbered_list";
+  items: string[];
+}
+
+export interface QuoteBlock {
+  type: "quote";
+  text: string;
+}
+
+export interface DividerBlock {
+  type: "divider";
+}
+
+export interface CalloutBlock {
+  type: "callout";
+  title?: string;
+  text: string;
+}
+
+export interface ImageBlock {
+  type: "image";
+  src: string;
+  alt?: string;
+  caption?: string;
+}
+
+export type BlogBlock =
+  | HeadingBlock
+  | ParagraphBlock
+  | BulletListBlock
+  | NumberedListBlock
+  | QuoteBlock
+  | DividerBlock
+  | CalloutBlock
+  | ImageBlock;
+
+export interface BlogContent {
+  blocks: BlogBlock[];
+}
+
 export interface Blog {
   id: string | number;
   title: string;
@@ -43,7 +100,7 @@ export interface Blog {
   author: string;
   published_date: string;
   reading_time: string;
-  content: Record<string, unknown> | null;
+  content: BlogContent | null;
   is_published: boolean;
   created_at?: string;
   updated_at?: string;
@@ -129,4 +186,22 @@ export async function getPublishedBlogs(): Promise<Blog[]> {
     throw error;
   }
   return data || [];
+}
+
+export async function getBlogBySlug(slug: string): Promise<Blog | null> {
+  const { data, error } = await supabase
+    .from("blogs")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    console.error("Error fetching blog by slug:", error);
+    throw error;
+  }
+  return data;
 }

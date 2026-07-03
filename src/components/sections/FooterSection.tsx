@@ -1581,13 +1581,58 @@ export default function FooterSection() {
           border-top: 1px solid rgba(201, 160, 80, 0.25);
           padding-top: 32px;
           padding-bottom: 32px;
-          text-align: center;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 16px;
+        }
+
+        @media (max-width: 767px) {
+          .footer-copyright-bar {
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            gap: 24px;
+          }
         }
 
         .footer-copyright-text {
           font-size: 13px;
           font-weight: 400;
           color: #8C857A;
+        }
+
+        .made-by-assanj-link {
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          text-decoration: none;
+          color: #8C857A;
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          transition: color 0.2s ease;
+        }
+
+        .made-by-assanj-link:hover {
+          color: #C9A050;
+        }
+
+        .made-by-assanj-logo {
+          height: 72px;
+          width: auto;
+          object-fit: contain;
+          border-radius: 4px;
+          transition: transform 0.2s ease, filter 0.2s ease;
+          filter: brightness(0.95) contrast(1.05);
+        }
+
+        .made-by-assanj-link:hover .made-by-assanj-logo {
+          transform: scale(1.05);
+          filter: brightness(1.1) contrast(1.1);
         }
 
         /* --- RESPONSIVE BREAKPOINTS --- */
@@ -1945,6 +1990,19 @@ export default function FooterSection() {
           {/* Bottom Copyright Bar - Dynamic Year */}
           <div className="footer-copyright-bar">
             <span className="footer-copyright-text">© {new Date().getFullYear()} iDecorwala Interiors Pvt. Ltd. All rights reserved.</span>
+            <a 
+              href="https://www.instagram.com/assanj2025/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="made-by-assanj-link"
+            >
+              <img 
+                src="/assanj-logo.png" 
+                alt="Assanj Logo" 
+                className="made-by-assanj-logo"
+              />
+              <span>Made By Assanj</span>
+            </a>
           </div>
         </div>
       </div>

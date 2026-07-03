@@ -119,92 +119,74 @@ export default function ThoughtLeadershipList() {
       <div className={styles.container}>
         
         {/* Dynamic Filters Section */}
-        <div className="mb-12 p-6 sm:p-8 bg-[#FAF6EE] rounded-[20px] border border-[rgba(201,168,76,0.25)] shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
-          <div className="flex flex-col gap-6">
-            
-            {/* Categories */}
-            <div>
-              <div className="flex items-center gap-2 mb-3 text-[#761416] font-semibold text-[13px] tracking-wider uppercase">
-                <Layers size={14} className="text-[#C9A84C]" />
-                Filter by Category
-              </div>
-              <div className="flex flex-wrap gap-2">
+        <div className={styles.filterPanel}>
+          
+          {/* Categories */}
+          <div className={styles.filterGroup}>
+            <div className={styles.filterHeader}>
+              <Layers size={14} className="text-[#C9A84C]" />
+              Filter by Category
+            </div>
+            <div className={styles.filterButtons}>
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className={!selectedCategory ? styles.filterPillCategoryActive : styles.filterPillCategoryInactive}
+              >
+                All Categories
+              </button>
+              {categories.map((cat) => (
                 <button
-                  onClick={() => setSelectedCategory(null)}
-                  className={`px-4 py-2 text-[12px] font-bold rounded-full transition-all duration-200 border cursor-pointer ${
-                    !selectedCategory
-                      ? "bg-[#8B1A1A] border-[#8B1A1A] text-white shadow-[0_3px_8px_rgba(139,26,26,0.3)]"
-                      : "bg-[#FFFFFF] border-[#E5DFD3] text-[#4A4541] hover:border-[#8B1A1A] hover:text-[#8B1A1A]"
-                  }`}
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={selectedCategory === cat ? styles.filterPillCategoryActive : styles.filterPillCategoryInactive}
                 >
-                  All Categories
+                  {cat}
                 </button>
-                {categories.map((cat) => (
+              ))}
+            </div>
+          </div>
+
+          {/* Tags */}
+          {tags.length > 0 && (
+            <div className={styles.filterGroup}>
+              <div className={styles.filterHeader}>
+                <TagIcon size={14} className="text-[#C9A84C]" />
+                Filter by Tag
+              </div>
+              <div className={styles.filterButtons}>
+                <button
+                  onClick={() => setSelectedTag(null)}
+                  className={!selectedTag ? styles.filterPillTagActive : styles.filterPillTagInactive}
+                >
+                  All Tags
+                </button>
+                {tags.map((tag) => (
                   <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-2 text-[12px] font-bold rounded-full transition-all duration-200 border cursor-pointer ${
-                      selectedCategory === cat
-                        ? "bg-[#8B1A1A] border-[#8B1A1A] text-white shadow-[0_3px_8px_rgba(139,26,26,0.3)]"
-                        : "bg-[#FFFFFF] border-[#E5DFD3] text-[#4A4541] hover:border-[#8B1A1A] hover:text-[#8B1A1A]"
-                    }`}
+                    key={tag}
+                    onClick={() => setSelectedTag(tag)}
+                    className={selectedTag === tag ? styles.filterPillTagActive : styles.filterPillTagInactive}
                   >
-                    {cat}
+                    #{tag}
                   </button>
                 ))}
               </div>
             </div>
+          )}
 
-            {/* Tags */}
-            {tags.length > 0 && (
-              <div>
-                <div className="flex items-center gap-2 mb-3 text-[#761416] font-semibold text-[13px] tracking-wider uppercase">
-                  <TagIcon size={14} className="text-[#C9A84C]" />
-                  Filter by Tag
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => setSelectedTag(null)}
-                    className={`px-3 py-1.5 text-[11px] font-bold rounded-full transition-all duration-200 border cursor-pointer ${
-                      !selectedTag
-                        ? "bg-[#C4973A] border-[#C4973A] text-white shadow-[0_2px_6px_rgba(196,151,58,0.3)]"
-                        : "bg-[#FFFFFF] border-[#E5DFD3] text-[#4A4541] hover:border-[#C4973A] hover:text-[#C4973A]"
-                    }`}
-                  >
-                    All Tags
-                  </button>
-                  {tags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => setSelectedTag(tag)}
-                      className={`px-3 py-1.5 text-[11px] font-bold rounded-full transition-all duration-200 border cursor-pointer ${
-                        selectedTag === tag
-                          ? "bg-[#C4973A] border-[#C4973A] text-white shadow-[0_2px_6px_rgba(196,151,58,0.3)]"
-                          : "bg-[#FFFFFF] border-[#E5DFD3] text-[#4A4541] hover:border-[#C4973A] hover:text-[#C4973A]"
-                      }`}
-                    >
-                      #{tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Active Filters Clear Indicator */}
-            {(selectedCategory || selectedTag) && (
-              <div className="flex items-center justify-between border-t border-[rgba(201,168,76,0.15)] pt-4 mt-2">
-                <span className="text-[12px] font-medium text-[#6E6B64]">
-                  Showing {filteredBlogs.length} {filteredBlogs.length === 1 ? "article" : "articles"}
-                </span>
-                <button
-                  onClick={resetFilters}
-                  className="text-[12px] font-bold text-[#8B1A1A] hover:text-[#520F0F] transition-colors bg-transparent border-0 cursor-pointer underline underline-offset-4"
-                >
-                  Clear all filters
-                </button>
-              </div>
-            )}
-          </div>
+          {/* Active Filters Clear Indicator */}
+          {(selectedCategory || selectedTag) && (
+            <div className={styles.filterMetaRow}>
+              <span className="text-[12px] font-medium text-[#6E6B64]">
+                Showing {filteredBlogs.length} {filteredBlogs.length === 1 ? "article" : "articles"}
+              </span>
+              <button
+                onClick={resetFilters}
+                className="text-[12px] font-bold text-[#8B1A1A] hover:text-[#520F0F] transition-colors bg-transparent border-0 cursor-pointer underline underline-offset-4"
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Dynamic Card Grid */}
@@ -236,40 +218,62 @@ export default function ThoughtLeadershipList() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.35, delay: index * 0.04 }}
                 >
-                  <BookOpen size={38} strokeWidth={1.35} className="text-[#B8862E]" />
-                  <h3>{article.title}</h3>
-                  
                   <div className={styles.productPhoto}>
-                    <Image
-                      src={article.cover_image || "/imgs/blogs_placeholder.png"}
-                      alt={article.title}
-                      fill
-                      sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 25vw"
-                    />
+                    <Link href={`/company/thought-leadership/${article.slug}`} className="block relative w-full h-full">
+                      <Image
+                        src={article.cover_image || "/imgs/blogs_placeholder.png"}
+                        alt={article.title}
+                        fill
+                        sizes="(max-width: 767px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                        className="transition-transform duration-500 ease-out"
+                      />
+                    </Link>
                   </div>
                   
-                  <p>{article.excerpt}</p>
-                  
-                  <div className="flex items-center gap-2 flex-wrap mb-4">
-                    {article.category && (
-                      <span className="px-2 py-0.5 text-[9px] font-bold tracking-wider text-[#8B1A1A] bg-[rgba(139,26,26,0.06)] border border-[rgba(139,26,26,0.1)] rounded-md">
-                        {article.category.toUpperCase()}
+                  <div className={styles.productContent}>
+                    <div className={styles.cardMeta}>
+                      {article.category ? (
+                        <span className={styles.cardCategory}>
+                          {article.category}
+                        </span>
+                      ) : (
+                        <span></span>
+                      )}
+                      <span className={styles.cardReadingTime}>
+                        {(() => {
+                          const timeVal = String(article.reading_time || "5").replace(/[^0-9]/g, "");
+                          return `${timeVal} mins read`;
+                        })()}
                       </span>
-                    )}
-                    {article.tags && article.tags.map((tag) => (
-                      <span key={tag} className="text-[10px] text-[#C4973A] font-medium">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
+                    </div>
 
-                  <div className="text-[11px] text-[#8C8880] mb-3">
-                    By {article.author || "iDecorwala Editorial"} • {article.reading_time || "5 min read"}
+                    <h3>
+                      <Link href={`/company/thought-leadership/${article.slug}`} className="hover:text-[#8b1a1a] transition-colors duration-200">
+                        {article.title}
+                      </Link>
+                    </h3>
+                    
+                    <p>{article.excerpt}</p>
+                    
+                    {article.tags && article.tags.length > 0 && (
+                      <div className={styles.cardTags}>
+                        {article.tags.map((tag) => (
+                          <span key={tag} className={styles.cardTag}>
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className={styles.cardFooter}>
+                      <span className={styles.cardAuthor}>
+                        By {article.author || "iDecorwala Editorial"}
+                      </span>
+                      <Link href={`/company/thought-leadership/${article.slug}`} className={styles.cardLink}>
+                        Read More <ArrowRight size={13} className="transition-transform duration-200" />
+                      </Link>
+                    </div>
                   </div>
-                  
-                  <Link href={`/company/thought-leadership`} className={styles.cardLink}>
-                    Read More <ArrowRight size={13} />
-                  </Link>
                 </motion.article>
               ))}
             </motion.div>

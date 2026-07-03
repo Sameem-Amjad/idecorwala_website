@@ -70,11 +70,11 @@ function mapDbBlogToBlogPost(dbBlog: DbBlogPost): BlogPost {
           year: "numeric"
         }) 
       : "No Date",
-    readTime: dbBlog.reading_time || "5 min read",
+    readTime: dbBlog.reading_time ? `${String(dbBlog.reading_time).replace(/[^0-9]/g, "")} mins read` : "5 mins read",
     title: dbBlog.title || "",
     description: dbBlog.excerpt || "",
     image: dbBlog.cover_image || "/imgs/blogs_placeholder.png",
-    href: `/company/thought-leadership`
+    href: `/company/thought-leadership/${dbBlog.slug}`
   };
 }
 
@@ -551,11 +551,13 @@ export default function BlogsSection({ posts, onSubscribe }: BlogsSectionProps) 
               >
                 {/* Card Image Wrapper */}
                 <div className="blog-card__image-wrapper">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="blog-card__image transition-transform duration-500 ease-out group-hover:scale-106"
-                  />
+                  <Link href={post.href}>
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="blog-card__image transition-transform duration-500 ease-out group-hover:scale-106"
+                    />
+                  </Link>
                   
                   {/* Specific stronger image grain layer */}
                   <div
@@ -592,7 +594,9 @@ export default function BlogsSection({ posts, onSubscribe }: BlogsSectionProps) 
 
                   {/* Title */}
                   <h3 className="blog-card__title">
-                    {post.title}
+                    <Link href={post.href} className="hover:text-[#B8863D] transition-colors duration-200">
+                      {post.title}
+                    </Link>
                   </h3>
 
                   {/* Description */}
