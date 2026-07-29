@@ -984,7 +984,7 @@ export default function Navbar() {
               <div className="flex items-center justify-between px-4 pb-2 pt-7">
                 <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
                   <img 
-                    src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781154909/iD_logo_RED-Photoroom_p59ja1.png" 
+                    src="/images/idecorwala-logo.png" 
                     alt="iDECORWALA Logo" 
                     className="h-[44px] w-auto object-contain" 
                     style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.05))" }}
