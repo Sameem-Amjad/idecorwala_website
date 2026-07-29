@@ -333,7 +333,7 @@ export default function Navbar() {
         {isThoughtLeadership ? (
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
             <img 
-              src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781154909/iD_logo_RED-Photoroom_p59ja1.png" 
+              src="/images/idecorwala-logo.png" 
               alt="iDECORWALA Logo" 
               className="h-10 w-auto object-contain" 
             />
