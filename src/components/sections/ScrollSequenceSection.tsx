@@ -10,23 +10,24 @@ if (typeof window !== "undefined") {
 
 const FRAME_COUNT = 230;
 
-// The decimated count is the real memory dial: every decoded 1280x720 frame holds roughly
-// 3.7MB of bitmap, so 115 frames sit at ~425MB. Desktops absorb that; phones hit GC pauses
-// that surface as scroll stutter, so mobile halves it again.
-const DESKTOP_DECIMATED_COUNT = 115;
-const MOBILE_DECIMATED_COUNT = 58;
+const frameSrc = (frameIndex: number) => {
+  const fileIndex = Math.min(FRAME_COUNT, Math.max(1, frameIndex + 1));
+  return `/imgs/hero%20section%20frames/ezgif-frame-${String(fileIndex).padStart(3, '0')}.jpg`;
+};
 
-const makeFrameHelpers = (count: number) => ({
-  getDecimatedIndex: (frameIndex: number) =>
-    Math.min(count - 1, Math.round((frameIndex / (FRAME_COUNT - 1)) * (count - 1))),
-  currentFrame: (decimatedIndex: number) => {
-    const fileIndex = Math.min(
-      FRAME_COUNT,
-      Math.round((decimatedIndex / (count - 1)) * (FRAME_COUNT - 1)) + 1
-    );
-    return `/imgs/hero%20section%20frames/ezgif-frame-${String(fileIndex).padStart(3, '0')}.jpg`;
-  },
-});
+// Sliding-window frame cache. Only frames near the playhead stay decoded and the rest are
+// released, so memory is bounded by the window size rather than the sequence length — a
+// decoded 1280x720 frame costs ~3.7MB, so ~40 resident frames is ~150MB no matter how long
+// the sequence gets. This replaces decimation, so every frame is now available and the
+// animation is temporally smoother than before, at full resolution.
+//
+// Ahead > behind because scrolling down is the common direction, and the behind buffer
+// keeps small back-scrolls from thrashing. Released frames stay in the browser's HTTP
+// cache, so re-entering a frame is a decode rather than a network round-trip.
+const WINDOW_AHEAD_DESKTOP = 30;
+const WINDOW_BEHIND_DESKTOP = 10;
+const WINDOW_AHEAD_MOBILE = 16;
+const WINDOW_BEHIND_MOBILE = 6;
 
 export default function ScrollSequenceSection({ children }: { children: React.ReactNode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -63,10 +64,19 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
     isMobileRef.current = mobile;
     setIsMobile(mobile);
 
-    const DECIMATED_FRAME_COUNT = mobile ? MOBILE_DECIMATED_COUNT : DESKTOP_DECIMATED_COUNT;
-    const { getDecimatedIndex, currentFrame } = makeFrameHelpers(DECIMATED_FRAME_COUNT);
+    const windowAhead = mobile ? WINDOW_AHEAD_MOBILE : WINDOW_AHEAD_DESKTOP;
+    const windowBehind = mobile ? WINDOW_BEHIND_MOBILE : WINDOW_BEHIND_DESKTOP;
 
-    const images: (HTMLImageElement | null)[] = new Array(DECIMATED_FRAME_COUNT).fill(null);
+    const images: (HTMLImageElement | null)[] = new Array(FRAME_COUNT).fill(null);
+    const resident = new Set<number>();
+    const inFlight = new Set<number>();
+    let windowLo = 0;
+    let windowHi = 0;
+    let windowCenter = -1;
+    let currentIdx = 0;
+    // Last frame actually painted — the guarantee that the canvas is never blank even if
+    // the playhead outruns decoding on a fast flick.
+    let lastPainted: HTMLImageElement | null = null;
 
     const drawImageScaled = (img: HTMLImageElement, ctx: CanvasRenderingContext2D) => {
         const canvasElement = ctx.canvas;
@@ -79,110 +89,94 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
         ctx.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
     };
 
-    // Load initial image — on mobile start at frame 34 (MOBILE_FRAME_OFFSET)
-    // so the central logo is immediately clean and visible
+    // On mobile start at frame 34 (MOBILE_FRAME_OFFSET) so the central logo is clean
+    // and visible immediately.
     const startFrame = mobile ? MOBILE_FRAME_OFFSET : 0;
-    const startDecimatedIdx = getDecimatedIndex(startFrame);
-    const initialImg = new Image();
-    initialImg.src = currentFrame(startDecimatedIdx);
-    initialImg.onload = () => {
-      images[startDecimatedIdx] = initialImg;
-      drawImageScaled(initialImg, context);
+
+    const requestFrame = (i: number) => {
+      if (i < 0 || i >= FRAME_COUNT) return;
+      if (images[i] || inFlight.has(i)) return;
+      inFlight.add(i);
+      const img = new Image();
+      img.decoding = "async";
+      img.onload = () => {
+        inFlight.delete(i);
+        // Before the first paint, take whatever decodes first — on a very fast flick the
+        // window can outrun every in-flight frame, and this is what stops the canvas
+        // sitting blank until the scroll settles.
+        if (!lastPainted) {
+          drawImageScaled(img, context);
+          lastPainted = img;
+        }
+        // The playhead may have moved on while this was decoding; if this frame is no
+        // longer in the window, drop it rather than growing the cache past its budget.
+        if (i < windowLo || i > windowHi) return;
+        images[i] = img;
+        resident.add(i);
+        if (i === currentIdx) {
+          drawImageScaled(img, context);
+          lastPainted = img;
+        }
+      };
+      img.onerror = () => inFlight.delete(i);
+      img.src = frameSrc(i);
     };
-    // Also preload frame 0 for the images array fallback ONLY on desktop
-    if (!mobile) {
-      const frame0 = new Image();
-      frame0.src = currentFrame(0);
-      frame0.onload = () => { images[0] = frame0; };
-    }
+
+    // Re-centre the window: release what fell outside, then request what's inside,
+    // nearest-to-playhead first so the most urgently needed frames win the connection.
+    const recentreWindow = (center: number) => {
+      windowLo = Math.max(0, center - windowBehind);
+      windowHi = Math.min(FRAME_COUNT - 1, center + windowAhead);
+
+      for (const i of resident) {
+        if (i < windowLo || i > windowHi) {
+          images[i] = null;
+          resident.delete(i);
+        }
+      }
+
+      const span = Math.max(center - windowLo, windowHi - center);
+      for (let d = 0; d <= span; d++) {
+        requestFrame(center + d);
+        if (d > 0) requestFrame(center - d);
+      }
+    };
 
     // Synchronous, zero-latency frame drawer
     const drawFrame = (frameIndex: number) => {
-      const decimatedIdx = getDecimatedIndex(frameIndex);
-      let activeImg = images[decimatedIdx];
-      
+      const idx = Math.min(FRAME_COUNT - 1, Math.max(0, frameIndex));
+      currentIdx = idx;
+      if (idx !== windowCenter) {
+        windowCenter = idx;
+        recentreWindow(idx);
+      }
+
+      let activeImg = images[idx];
+
+      // Nearest resident frame — bounded by the window, so this stays cheap.
       if (!activeImg) {
-        // Fallback to nearest loaded decimated frame in cache
-        let dist = 1;
-        while (dist < DECIMATED_FRAME_COUNT) {
-          if (decimatedIdx - dist >= 0 && images[decimatedIdx - dist]) {
-            activeImg = images[decimatedIdx - dist];
-            break;
-          }
-          if (decimatedIdx + dist < DECIMATED_FRAME_COUNT && images[decimatedIdx + dist]) {
-            activeImg = images[decimatedIdx + dist];
-            break;
-          }
-          dist++;
+        for (let d = 1; d <= windowAhead + windowBehind; d++) {
+          const lo = idx - d;
+          const hi = idx + d;
+          if (lo >= 0 && images[lo]) { activeImg = images[lo]; break; }
+          if (hi < FRAME_COUNT && images[hi]) { activeImg = images[hi]; break; }
         }
       }
-      
-      // Fallback to start frame (guaranteed to be loaded on mount)
-      if (!activeImg && images[startDecimatedIdx]) {
-        activeImg = images[startDecimatedIdx];
-      }
-      // Final fallback: any loaded frame (excluding frame 0 on mobile to prevent early flashes)
-      if (!activeImg && !isMobileRef.current && images[0]) {
-        activeImg = images[0];
-      }
-      
+
+      // Nothing resident yet: hold the previous paint rather than flashing empty.
+      if (!activeImg) activeImg = lastPainted;
+
       if (activeImg) {
         drawImageScaled(activeImg, context);
+        lastPainted = activeImg;
       }
     };
 
-    // Preload decimated images in staggered batches prioritising active frame ranges
-    const preloadImagesBatch = async () => {
-      const batchSize = 12;
-      const startIdx = getDecimatedIndex(mobile ? MOBILE_FRAME_OFFSET : 0);
+    // Prime the window around the opening frame.
+    currentIdx = startFrame;
+    windowCenter = startFrame;
+    recentreWindow(startFrame);
 
-      // 1. First preload forward frames (active scroll range)
-      for (let i = startIdx; i < DECIMATED_FRAME_COUNT; i += batchSize) {
-        const batch = [];
-        for (let j = i; j < i + batchSize && j < DECIMATED_FRAME_COUNT; j++) {
-          if (j === startIdx) continue; // Skip initial frame (already loaded)
-          batch.push(
-            new Promise<void>((resolve) => {
-              const imgInstance = new Image();
-              imgInstance.src = currentFrame(j);
-              imgInstance.onload = () => {
-                images[j] = imgInstance;
-                resolve();
-              };
-              imgInstance.onerror = () => resolve();
-            })
-          );
-        }
-        if (batch.length > 0) {
-          await Promise.all(batch);
-        }
-        await new Promise((resolve) => setTimeout(resolve, 8));
-      }
-
-      // 2. On mobile, preload skipped frames (0 to startIdx) in background later
-      if (mobile) {
-        for (let i = 0; i < startIdx; i += batchSize) {
-          const batch = [];
-          for (let j = i; j < i + batchSize && j < startIdx; j++) {
-            batch.push(
-              new Promise<void>((resolve) => {
-                const imgInstance = new Image();
-                imgInstance.src = currentFrame(j);
-                imgInstance.onload = () => {
-                  images[j] = imgInstance;
-                  resolve();
-                };
-                imgInstance.onerror = () => resolve();
-              })
-            );
-          }
-          if (batch.length > 0) {
-            await Promise.all(batch);
-          }
-          await new Promise((resolve) => setTimeout(resolve, 8));
-        }
-      }
-    };
     // Helper function to animate overlays smoothly with fade + translate/scale physics
     const animateOverlay = (
       ref: React.RefObject<HTMLDivElement | null>,
@@ -236,8 +230,6 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
         ref.current.style.visibility = "hidden";
       }
     };
-
-    preloadImagesBatch();
 
     const setCanvasSize = () => {
       canvas.width = window.innerWidth;
@@ -362,6 +354,9 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
       window.removeEventListener("resize", setCanvasSize);
       // Drop bitmap references so navigating away releases the frame cache.
       images.fill(null);
+      resident.clear();
+      inFlight.clear();
+      lastPainted = null;
     };
   }, []);
 

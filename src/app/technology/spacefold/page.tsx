@@ -46,8 +46,26 @@ export default function SpacefoldPage() {
     if (!container) return;
 
     const frameCount = 241;
-    // Sparse array indexed 0..frameCount-1
+
+    // Sliding-window frame cache — only frames near the playhead stay decoded, the rest
+    // are released. Memory is bounded by the window (~40 frames, ~150MB) instead of the
+    // sequence length, which previously held all 241 frames (~880MB) and fired 241
+    // parallel requests at once. Every frame stays available at full resolution.
+    const isNarrow = window.innerWidth <= 640;
+    const windowAhead = isNarrow ? 16 : 30;
+    const windowBehind = isNarrow ? 6 : 10;
+
     const images: (HTMLImageElement | null)[] = new Array(frameCount).fill(null);
+    const resident = new Set<number>();
+    const inFlight = new Set<number>();
+    let windowLo = 0;
+    let windowHi = 0;
+    let windowCenter = -1;
+    let currentIdx = 0;
+    let cancelled = false;
+    // Last painted frame — guarantees the canvas is never blank if the playhead
+    // outruns decoding.
+    let lastPainted: HTMLImageElement | null = null;
 
     const drawImageCover = (img: HTMLImageElement, ctx: CanvasRenderingContext2D) => {
       const c = ctx.canvas;
@@ -60,17 +78,93 @@ export default function SpacefoldPage() {
       ctx.drawImage(img, 0, 0, img.width, img.height, cx, cy, img.width * ratio, img.height * ratio);
     };
 
-    // Draw best available frame (nearest loaded fallback prevents black flashes)
-    const drawFrame = (targetIdx: number) => {
-      let img = images[targetIdx];
-      if (!img) {
-        // Walk outwards to find the nearest already-loaded frame
-        for (let d = 1; d < frameCount; d++) {
-          if (targetIdx - d >= 0 && images[targetIdx - d]) { img = images[targetIdx - d]; break; }
-          if (targetIdx + d < frameCount && images[targetIdx + d]) { img = images[targetIdx + d]; break; }
+    // The loading overlay only shows until frame 0 arrives, so progress is reported
+    // against the opening window rather than the whole sequence.
+    const primeTarget = Math.min(frameCount, windowAhead + 1);
+    let primedCount = 0;
+
+    const requestFrame = (i: number) => {
+      if (cancelled || i < 0 || i >= frameCount) return;
+      if (images[i] || inFlight.has(i)) return;
+      inFlight.add(i);
+      const img = new Image();
+      img.decoding = "async";
+      const settle = () => {
+        inFlight.delete(i);
+        if (primedCount < primeTarget) {
+          primedCount++;
+          setLoadProgress(Math.round((primedCount / primeTarget) * 100));
+        }
+      };
+      img.onload = () => {
+        settle();
+        // Before the first paint, take whatever decodes first — on a very fast flick the
+        // window can outrun every in-flight frame, and this is what stops the canvas
+        // sitting blank until the scroll settles.
+        if (!lastPainted) {
+          drawImageCover(img, context);
+          lastPainted = img;
+        }
+        // Discard if the playhead moved past this frame while it was decoding.
+        if (i < windowLo || i > windowHi) return;
+        images[i] = img;
+        resident.add(i);
+        if (i === 0) {
+          setCanvasSize();
+          setIsFirstFrameReady(true);
+        }
+        if (i === currentIdx) {
+          drawImageCover(img, context);
+          lastPainted = img;
+        }
+      };
+      img.onerror = settle;
+      img.src = `/images/spacefold/scroll/ezgif-frame-${String(i + 1).padStart(3, "0")}.jpg`;
+    };
+
+    // Re-centre the window: release what fell outside, then request what's inside,
+    // nearest-to-playhead first.
+    const recentreWindow = (center: number) => {
+      windowLo = Math.max(0, center - windowBehind);
+      windowHi = Math.min(frameCount - 1, center + windowAhead);
+
+      for (const i of resident) {
+        if (i < windowLo || i > windowHi) {
+          images[i] = null;
+          resident.delete(i);
         }
       }
-      if (img) drawImageCover(img, context);
+
+      const span = Math.max(center - windowLo, windowHi - center);
+      for (let d = 0; d <= span; d++) {
+        requestFrame(center + d);
+        if (d > 0) requestFrame(center - d);
+      }
+    };
+
+    // Draw best available frame (nearest resident fallback prevents black flashes)
+    const drawFrame = (targetIdx: number) => {
+      const idx = Math.min(frameCount - 1, Math.max(0, targetIdx));
+      currentIdx = idx;
+      if (idx !== windowCenter) {
+        windowCenter = idx;
+        recentreWindow(idx);
+      }
+
+      let img = images[idx];
+      if (!img) {
+        for (let d = 1; d <= windowAhead + windowBehind; d++) {
+          const lo = idx - d;
+          const hi = idx + d;
+          if (lo >= 0 && images[lo]) { img = images[lo]; break; }
+          if (hi < frameCount && images[hi]) { img = images[hi]; break; }
+        }
+      }
+      if (!img) img = lastPainted;
+      if (img) {
+        drawImageCover(img, context);
+        lastPainted = img;
+      }
     };
 
     const setCanvasSize = () => {
@@ -81,46 +175,8 @@ export default function SpacefoldPage() {
       else drawFrame(0);
     };
 
-    // Decimate the sequence instead of decoding all 241 frames. Each 1280x720 frame costs
-    // ~3.7MB once decoded, so the full set held ~880MB of bitmaps and fired 241 parallel
-    // requests — the main cause of the scroll stutter. drawFrame's nearest-loaded fallback
-    // covers the skipped indices, so the animation still reads as continuous.
-    const step = window.innerWidth <= 640 ? 3 : 2;
-    const frameIndices: number[] = [];
-    for (let i = 0; i < frameCount; i += step) frameIndices.push(i);
-    if (frameIndices[frameIndices.length - 1] !== frameCount - 1) frameIndices.push(frameCount - 1);
-
-    let cancelled = false;
-    let loadedCount = 0;
-
-    const loadFrame = (idx: number) =>
-      new Promise<void>((resolve) => {
-        const img = new Image();
-        const done = () => {
-          loadedCount++;
-          setLoadProgress(Math.round((loadedCount / frameIndices.length) * 100));
-          resolve();
-        };
-        img.onload = () => {
-          images[idx] = img;
-          if (idx === 0) {
-            setCanvasSize();
-            setIsFirstFrameReady(true);
-          }
-          done();
-        };
-        img.onerror = done;
-        img.src = `/images/spacefold/scroll/ezgif-frame-${String(idx + 1).padStart(3, "0")}.jpg`;
-      });
-
-    // Sequential batches keep the connection free for the rest of the page.
-    void (async () => {
-      const batchSize = 10;
-      for (let i = 0; i < frameIndices.length; i += batchSize) {
-        if (cancelled) return;
-        await Promise.all(frameIndices.slice(i, i + batchSize).map(loadFrame));
-      }
-    })();
+    // Prime the opening window.
+    recentreWindow(0);
 
     setCanvasSize();
     setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -146,6 +202,9 @@ export default function SpacefoldPage() {
       window.removeEventListener("resize", setCanvasSize);
       // Drop bitmap references so the decoded frames can be collected on navigation.
       images.fill(null);
+      resident.clear();
+      inFlight.clear();
+      lastPainted = null;
     };
   }, []);
 
