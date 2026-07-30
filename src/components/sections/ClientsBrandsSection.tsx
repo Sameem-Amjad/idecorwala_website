@@ -20,29 +20,29 @@ interface LogoItem {
 }
 
 const LOGO_HOSPITALITY: LogoItem[] = [
-  { brand: "TAJ", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774019/taj_vpqzyp.png", alt: "Taj Hotels logo" },
-  { brand: "IHCL", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774025/ihcl_vdlu34.png", alt: "IHCL logo" },
-  { brand: "The Leela", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774027/the-leela_se92ul.png", alt: "The Leela logo" },
-  { brand: "Radisson Blu", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774025/radisson_yfnvlz.png", alt: "Radisson Blu logo" },
-  { brand: "Accor", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774025/accor_vkzhkz.png", alt: "Accor logo" },
-  { brand: "Royal Orchid Hotels", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774019/royal-orchid_hdxrco.png", alt: "Royal Orchid Hotels logo" },
-  { brand: "Lemon Tree Hotels", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774017/lemontree_agsjtv.png", alt: "Lemon Tree Hotels logo" },
-  { brand: "Ramada by Wyndham", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774019/ramada_xb74ak.png", alt: "Ramada by Wyndham logo" },
-  { brand: "Sarovar Hotels & Resorts", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774023/sarovar_er5uiu.png", alt: "Sarovar Hotels logo" },
-  { brand: "Sterling Holidays", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774016/sterling_erujya.png", alt: "Sterling Holidays logo" }
+  { brand: "TAJ", src: "/logos/taj.png", alt: "Taj Hotels logo" },
+  { brand: "IHCL", src: "/logos/ihcl.png", alt: "IHCL logo" },
+  { brand: "The Leela", src: "/logos/the-leela.png", alt: "The Leela logo" },
+  { brand: "Radisson Blu", src: "/logos/radisson.png", alt: "Radisson Blu logo" },
+  { brand: "Accor", src: "/logos/accor.png", alt: "Accor logo" },
+  { brand: "Royal Orchid Hotels", src: "/logos/royal-orchid.png", alt: "Royal Orchid Hotels logo" },
+  { brand: "Lemon Tree Hotels", src: "/logos/lemontree.png", alt: "Lemon Tree Hotels logo" },
+  { brand: "Ramada by Wyndham", src: "/logos/ramada.png", alt: "Ramada by Wyndham logo" },
+  { brand: "Sarovar Hotels & Resorts", src: "/logos/sarovar.png", alt: "Sarovar Hotels logo" },
+  { brand: "Sterling Holidays", src: "/logos/sterling.png", alt: "Sterling Holidays logo" }
 ];
 
 const LOGO_CONSULTING: LogoItem[] = [
-  { brand: "Synergy Consulting", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774016/synergy_qdq3cd.png", alt: "Synergy Consulting logo" },
-  { brand: "Shapoorji Pallonji", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774025/sp-infocity_yi1cqw.png", alt: "Shapoorji Pallonji logo" },
-  { brand: "JLL", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774028/jll_ms1zms.png", alt: "JLL logo" },
-  { brand: "CBRE", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774017/cbre_voik6c.png", alt: "CBRE logo" },
-  { brand: "Colliers International", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774028/colliers_t0xbw6.png", alt: "Colliers International logo" },
-  { brand: "Häfele", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774027/hafele_yxd76x.png", alt: "Häfele logo" },
-  { brand: "Hettich", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774025/hettich_transparent_clean_vun3l1.png", alt: "Hettich logo" },
-  { brand: "Dorn Bracht", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774027/dorn-bracht_qafzws.png", alt: "Dorn Bracht logo" },
-  { brand: "Kaff", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774021/kaff_sjctia.png", alt: "Kaff logo" },
-  { brand: "AGL (Asian Granito)", src: "https://res.cloudinary.com/dr9ebvpou/image/upload/v1781774025/asian-granito_rv8q5n.png", alt: "Asian Granito logo" }
+  { brand: "Synergy Consulting", src: "/logos/synergy.png", alt: "Synergy Consulting logo" },
+  { brand: "Shapoorji Pallonji", src: "/logos/sp-infocity.png", alt: "Shapoorji Pallonji logo" },
+  { brand: "JLL", src: "/logos/jll.png", alt: "JLL logo" },
+  { brand: "CBRE", src: "/logos/cbre.png", alt: "CBRE logo" },
+  { brand: "Colliers International", src: "/logos/colliers.png", alt: "Colliers International logo" },
+  { brand: "Häfele", src: "/logos/hafele.png", alt: "Häfele logo" },
+  { brand: "Hettich", src: "/logos/hettich_transparent_clean.png", alt: "Hettich logo" },
+  { brand: "Dorn Bracht", src: "/logos/dorn-bracht.png", alt: "Dorn Bracht logo" },
+  { brand: "Kaff", src: "/logos/kaff.png", alt: "Kaff logo" },
+  { brand: "AGL (Asian Granito)", src: "/logos/asian-granito.png", alt: "Asian Granito logo" }
 ];
 
 

@@ -101,6 +101,28 @@ export default function ProjectShowcaseSection() {
         });
         const containerRect = containerRef.current!.getBoundingClientRect();
 
+        // Calling ScrollTrigger.refresh() straight from onLeave/onLeaveBack re-evaluated
+        // this very trigger, which re-fired the same callback and recursed until the stack
+        // blew (RangeError: Maximum call stack size exceeded). Two guards stop that: skip
+        // when the height is already what we want, and defer the refresh out of the
+        // callback so the in-flight refresh finishes before another can start.
+        let refreshQueued = false;
+        const lockPinHeight = () => {
+          const el = triggerRef.current;
+          if (el) el.style.height = "100vh";
+        };
+        const releasePinHeight = () => {
+          const el = triggerRef.current;
+          if (!el || el.style.height === "auto") return;
+          el.style.height = "auto";
+          if (refreshQueued) return;
+          refreshQueued = true;
+          requestAnimationFrame(() => {
+            refreshQueued = false;
+            ScrollTrigger.refresh();
+          });
+        };
+
         // 5. Create the new ScrollTrigger and timeline
         tl = gsap.timeline({
           scrollTrigger: {
@@ -111,24 +133,10 @@ export default function ProjectShowcaseSection() {
             pin: triggerRef.current, // Pin only the inner content wrapper
             anticipatePin: 1,
             invalidateOnRefresh: true,
-            onEnter: () => {
-              if (triggerRef.current) triggerRef.current.style.height = "100vh";
-            },
-            onLeave: () => {
-              if (triggerRef.current) {
-                triggerRef.current.style.height = "auto";
-                ScrollTrigger.refresh();
-              }
-            },
-            onEnterBack: () => {
-              if (triggerRef.current) triggerRef.current.style.height = "100vh";
-            },
-            onLeaveBack: () => {
-              if (triggerRef.current) {
-                triggerRef.current.style.height = "auto";
-                ScrollTrigger.refresh();
-              }
-            },
+            onEnter: lockPinHeight,
+            onLeave: releasePinHeight,
+            onEnterBack: lockPinHeight,
+            onLeaveBack: releasePinHeight,
           },
         });
 

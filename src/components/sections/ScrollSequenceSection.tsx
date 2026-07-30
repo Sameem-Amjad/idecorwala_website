@@ -9,15 +9,24 @@ if (typeof window !== "undefined") {
 }
 
 const FRAME_COUNT = 230;
-const DECIMATED_FRAME_COUNT = 115; // 50% fewer decoded bitmaps in memory
 
-const getDecimatedIndex = (frameIndex: number) => 
-  Math.min(DECIMATED_FRAME_COUNT - 1, Math.round((frameIndex / (FRAME_COUNT - 1)) * (DECIMATED_FRAME_COUNT - 1)));
+// The decimated count is the real memory dial: every decoded 1280x720 frame holds roughly
+// 3.7MB of bitmap, so 115 frames sit at ~425MB. Desktops absorb that; phones hit GC pauses
+// that surface as scroll stutter, so mobile halves it again.
+const DESKTOP_DECIMATED_COUNT = 115;
+const MOBILE_DECIMATED_COUNT = 58;
 
-const currentFrame = (decimatedIndex: number) => {
-  const fileIndex = Math.min(230, Math.round((decimatedIndex / (DECIMATED_FRAME_COUNT - 1)) * 229) + 1);
-  return `/imgs/hero%20section%20frames/ezgif-frame-${String(fileIndex).padStart(3, '0')}.jpg`;
-};
+const makeFrameHelpers = (count: number) => ({
+  getDecimatedIndex: (frameIndex: number) =>
+    Math.min(count - 1, Math.round((frameIndex / (FRAME_COUNT - 1)) * (count - 1))),
+  currentFrame: (decimatedIndex: number) => {
+    const fileIndex = Math.min(
+      FRAME_COUNT,
+      Math.round((decimatedIndex / (count - 1)) * (FRAME_COUNT - 1)) + 1
+    );
+    return `/imgs/hero%20section%20frames/ezgif-frame-${String(fileIndex).padStart(3, '0')}.jpg`;
+  },
+});
 
 export default function ScrollSequenceSection({ children }: { children: React.ReactNode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -49,6 +58,14 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
     const context = canvas.getContext("2d");
     if (!context) return;
 
+    // Detect mobile before sizing the frame cache — it decides the memory budget below.
+    const mobile = window.innerWidth <= 640;
+    isMobileRef.current = mobile;
+    setIsMobile(mobile);
+
+    const DECIMATED_FRAME_COUNT = mobile ? MOBILE_DECIMATED_COUNT : DESKTOP_DECIMATED_COUNT;
+    const { getDecimatedIndex, currentFrame } = makeFrameHelpers(DECIMATED_FRAME_COUNT);
+
     const images: (HTMLImageElement | null)[] = new Array(DECIMATED_FRAME_COUNT).fill(null);
 
     const drawImageScaled = (img: HTMLImageElement, ctx: CanvasRenderingContext2D) => {
@@ -61,11 +78,6 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
         ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         ctx.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
     };
-
-    // Detect mobile on mount — affects initial frame and frame offset
-    const mobile = window.innerWidth <= 640;
-    isMobileRef.current = mobile;
-    setIsMobile(mobile);
 
     // Load initial image — on mobile start at frame 34 (MOBILE_FRAME_OFFSET)
     // so the central logo is immediately clean and visible
@@ -348,6 +360,8 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
     return () => {
       trigger.kill();
       window.removeEventListener("resize", setCanvasSize);
+      // Drop bitmap references so navigating away releases the frame cache.
+      images.fill(null);
     };
   }, []);
 
@@ -395,7 +409,7 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
           }}
         >
           <img
-            src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781719633/WhatsApp_Image_2026-06-16_at_10.08.29_AM_qtrf09.jpg"
+            src="/imgs/hero%20section%20frames/ezgif-frame-230.jpg"
             alt="Final Frame"
             style={{
               width: "100%",
@@ -609,48 +623,11 @@ export default function ScrollSequenceSection({ children }: { children: React.Re
           }
         `}</style>
 
-        {/* Top-Left Corner Architectural Ribbon System (hero1.md) — desktop only */}
-        <div 
-          ref={cornerLeftRef}
-          className="absolute top-0 left-0 pointer-events-none z-20 hero-corner-left"
-          style={{
-            width: "28vw",
-            maxWidth: "500px",
-            aspectRatio: "1.5",
-            opacity: 1,
-            visibility: "visible",
-            willChange: "opacity",
-            transition: "opacity 0.05s ease-out",
-            clipPath: "polygon(0 0, 56% 0, 0 100%)",
-          }}
-        >
-          <img 
-            src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781714979/idc_lc-Photoroom_uw6dag.png" 
-            alt="Left Corner Ribbon"
-            style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
-          />
-        </div>
-
-        <div 
-          ref={cornerRightRef}
-          className="absolute bottom-0 right-0 pointer-events-none z-20 hero-corner-right"
-          style={{
-            width: "48vw",
-            maxWidth: "920px",
-            aspectRatio: "1.5",
-            opacity: 1,
-            visibility: "visible",
-            willChange: "opacity",
-            transition: "opacity 0.05s ease-out",
-            clipPath: "polygon(100% 0, 100% 100%, 30% 100%)",
-          }}
-        >
-          <img 
-            src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781714982/idc_rc-Photoroom_hx1fja.png" 
-            alt="Right Corner Sweep"
-            style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
-          />
-        </div>
+        {/* The top-left ribbon and bottom-right sweep used to render here from Cloudinary
+            (idc_lc / idc_rc). Those assets were deleted upstream and rendered as broken
+            images, so the markup is removed. cornerLeftRef/cornerRightRef and their
+            opacity driving in the scroll handler are left in place and null-guarded —
+            re-adding the two <div> wrappers with local art restores the effect as-is. */}
 
         {/* Initial Screen Text & Social Overlays (fades out in frames 0-12) */}
         <div 

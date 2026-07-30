@@ -81,7 +81,7 @@ export default function RootLayout({
     "@type": "Organization",
     "name": "iDecorwala",
     "url": BASE_URL,
-    "logo": "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781154909/iD_logo_RED-Photoroom_p59ja1.png",
+    "logo": `${BASE_URL}/id-logo-red.png`,
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Chennai",

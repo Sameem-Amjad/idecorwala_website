@@ -1815,7 +1815,7 @@ export default function FooterSection() {
             <div className="footer-brand-col">
               <div className="footer-logo-container" style={{ marginBottom: "16px" }}>
                 <img 
-                  src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781154909/iD_logo_RED-Photoroom_p59ja1.png" 
+                  src="/id-logo-red.png" 
                   alt="iDECORWALA Logo" 
                   style={{ height: "64px", width: "auto", objectFit: "contain" }} 
                 />

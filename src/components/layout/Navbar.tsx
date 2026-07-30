@@ -333,7 +333,7 @@ export default function Navbar() {
         {isThoughtLeadership ? (
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
             <img 
-              src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781154909/iD_logo_RED-Photoroom_p59ja1.png" 
+              src="/id-logo-red.png" 
               alt="iDECORWALA Logo" 
               className="h-10 w-auto object-contain" 
             />
@@ -348,14 +348,14 @@ export default function Navbar() {
           </Link>
         ) : (
           <Link href="/" className="flex items-center flex-shrink-0">
-            <img 
-              src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781154909/iD_logo_RED-Photoroom_p59ja1.png" 
-              alt="iDECORWALA Logo" 
-              className="h-12 w-auto object-contain" 
-              style={{
-                filter: (scrolled || pathname !== "/") ? "none" : "brightness(0) invert(1)",
-                transition: "filter 0.3s ease",
-              }}
+            {/* No invert over the hero: this mark is a filled red disc with a white
+                knockout, so brightness(0) invert(1) flattened it into a solid white
+                blob. The hero frames are light beige throughout, and the red disc
+                reads cleanly against them — same treatment as every other page. */}
+            <img
+              src="/id-logo-red.png"
+              alt="iDECORWALA Logo"
+              className="h-12 w-auto object-contain"
             />
           </Link>
         )}
@@ -984,7 +984,7 @@ export default function Navbar() {
               <div className="flex items-center justify-between px-4 pb-2 pt-7">
                 <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
                   <img 
-                    src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781154909/iD_logo_RED-Photoroom_p59ja1.png" 
+                    src="/id-logo-red.png" 
                     alt="iDECORWALA Logo" 
                     className="h-[44px] w-auto object-contain" 
                     style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.05))" }}

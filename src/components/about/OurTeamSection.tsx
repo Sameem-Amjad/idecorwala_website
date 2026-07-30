@@ -2,31 +2,54 @@
 
 import React from "react";
 import Image from "next/image";
-import { ChevronRight } from "lucide-react";
 import styles from "./OurTeam.module.css";
 
-const teamMembers = [
-  {
-    name: "Yamini Thaker",
-    role: "Director - Operations",
-    image: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1782103899/Screenshot_2026-06-22_101754_l1jgnt.png",
-  },
-  {
-    name: "Arindam Banerjee",
-    role: "Chief Revenue Officer",
-    image: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1782103899/Screenshot_2026-06-22_101815_alenlm.png",
-  },
-  {
-    name: "Druv Agarwal",
-    role: "Chief Delivery Officer",
-    image: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1782103899/Screenshot_2026-06-22_101803_ab3a0z.png",
-  },
-  {
-    name: "Bhaskar Tyagi",
-    role: "Head of Procurement",
-    image: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1782103899/Screenshot_2026-06-22_101824_sgcenp.png",
-  },
+interface TeamMember {
+  name: string;
+  role: string;
+  /** Headshot in /public. Leave unset to render the initials tile instead. */
+  image?: string;
+}
+
+// The original headshots lived on Cloudinary and were deleted upstream. Until real
+// photography is supplied, each member renders an initials tile — set `image` to a
+// path under /public to switch any of them back to a photo.
+const teamMembers: TeamMember[] = [
+  { name: "Yamini Thaker", role: "Director - Operations" },
+  { name: "Arindam Banerjee", role: "Chief Revenue Officer" },
+  { name: "Druv Agarwal", role: "Chief Delivery Officer" },
+  { name: "Bhaskar Tyagi", role: "Head of Procurement" },
 ];
+
+const CEO: TeamMember = { name: "Viral Thaker", role: "Founder & CEO" };
+
+const initialsOf = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+
+function MemberVisual({ member, sizes }: { member: TeamMember; sizes: string }) {
+  if (member.image) {
+    return (
+      <Image
+        src={member.image}
+        alt={member.name}
+        fill
+        sizes={sizes}
+        className={styles.imageScale}
+      />
+    );
+  }
+  return (
+    <div className={styles.initialsFallback} role="img" aria-label={member.name}>
+      <span className={styles.initialsText}>{initialsOf(member.name)}</span>
+    </div>
+  );
+}
 
 export default function OurTeamSection() {
   return (
@@ -50,16 +73,10 @@ export default function OurTeamSection() {
         <div className={styles.rightCol}>
           {/* CEO: Large grid item */}
           <div className={styles.ceoCard}>
-            <Image 
-              src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1782103900/Screenshot_2026-06-22_101735_qkelri.png" 
-              alt="Viral Thaker" 
-              fill
-              sizes="(max-width: 1024px) 100vw, 25vw"
-              className={styles.imageScale}
-            />
+            <MemberVisual member={CEO} sizes="(max-width: 1024px) 100vw, 25vw" />
             <div className={styles.labelOverlay}>
-              <h4 className={styles.memberName}>Viral Thaker</h4>
-              <p className={styles.memberRole}>Founder & CEO</p>
+              <h4 className={styles.memberName}>{CEO.name}</h4>
+              <p className={styles.memberRole}>{CEO.role}</p>
             </div>
           </div>
 
@@ -67,13 +84,7 @@ export default function OurTeamSection() {
           <div className={styles.grid4}>
             {teamMembers.map((member, index) => (
               <div key={index} className={styles.memberCard}>
-                <Image 
-                  src={member.image} 
-                  alt={member.name} 
-                  fill
-                  sizes="(max-width: 640px) 100vw, 20vw"
-                  className={styles.imageScale}
-                />
+                <MemberVisual member={member} sizes="(max-width: 640px) 100vw, 20vw" />
                 <div className={styles.labelOverlayBottom}>
                   <h4 className={styles.memberName}>{member.name}</h4>
                   <p className={styles.memberRole}>{member.role}</p>

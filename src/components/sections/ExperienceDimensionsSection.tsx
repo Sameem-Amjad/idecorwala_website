@@ -11,14 +11,86 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const ARCHES = [
+// Line-art stand-ins for the Wall/Floor/Ceiling/Space icons, whose raster originals were
+// deleted from Cloudinary. Drawn at the same 36px box and gold tone as the surviving
+// raster icons so the row still reads as one set.
+type DimensionGlyph = "walls" | "floors" | "ceilings" | "spaces";
+
+const GLYPH_PATHS: Record<DimensionGlyph, React.ReactNode> = {
+  walls: (
+    <>
+      <rect x="3" y="3.5" width="18" height="17" rx="1.5" />
+      <path d="M3 9.2h18M3 14.8h18M9 3.5v5.7M15 9.2v5.6M9 14.8v5.7" />
+    </>
+  ),
+  floors: (
+    <>
+      <path d="M3 19.5h18" />
+      <path d="M6.2 19.5 8 9.5M12 19.5v-10M17.8 19.5 16 9.5" />
+      <path d="M7.1 14.5h9.8M8 9.5h8" />
+    </>
+  ),
+  ceilings: (
+    <>
+      <path d="M2.5 4.5h19" />
+      <path d="M6.5 4.5v2.2M17.5 4.5v2.2M12 4.5v5.4" />
+      <path d="M8.4 15.2a3.6 3.6 0 0 1 7.2 0z" />
+      <path d="M8.4 15.2h7.2" />
+    </>
+  ),
+  spaces: (
+    <>
+      <path d="M4 7.8 12 3.5l8 4.3v8.4L12 20.5l-8-4.3z" />
+      <path d="M4 7.8 12 12l8-4.2M12 12v8.5" />
+    </>
+  ),
+};
+
+function DimensionGlyphIcon({ name }: { name: DimensionGlyph }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={36}
+      height={36}
+      fill="none"
+      stroke="#D8B25E"
+      strokeWidth={1.35}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{
+        display: "block",
+        marginTop: "20px",
+        marginLeft: "auto",
+        marginRight: "auto",
+        filter: "drop-shadow(0 4px 8px rgba(80, 50, 0, 0.45))",
+      }}
+    >
+      {GLYPH_PATHS[name]}
+    </svg>
+  );
+}
+
+interface ArchItem {
+  num: string;
+  title: string;
+  image: string;
+  categories: string[];
+  factor: number;
+  /** Raster icon under /public. */
+  icon?: string;
+  /** Inline line-art glyph, used when no raster icon exists. */
+  glyph?: DimensionGlyph;
+}
+
+const ARCHES: ArchItem[] = [
   {
     num: "01",
     title: "WALLS",
     image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=600",
     categories: ["Wallpaper", "Wall Murals", "Wall Art & Decals", "Wall Sculptures", "Finishes"],
     factor: 0,
-    icon: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781434801/WALL_ICON_1_y2gwoc.png",
+    glyph: "walls",
   },
   {
     num: "02",
@@ -26,7 +98,7 @@ const ARCHES = [
     image: "https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&q=80&w=600",
     categories: ["Wood", "Vinyl", "Epoxy", "Carpet", "Turf"],
     factor: 10,
-    icon: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781434796/FLOOR_ICON_h0jggd.png",
+    glyph: "floors",
   },
   {
     num: "03",
@@ -34,7 +106,7 @@ const ARCHES = [
     image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=600",
     categories: ["Gypsum", "PVC Panels", "Stretch Ceilings", "Ceiling Finishes"],
     factor: 20,
-    icon: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781434796/CEILING_ICON_aqrzwv.png",
+    glyph: "ceilings",
   },
   {
     num: "04",
@@ -42,7 +114,7 @@ const ARCHES = [
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600",
     categories: ["Modular Kitchens", "Furniture", "Lighting", "Décor & Accessories", "Turnkey Spaces"],
     factor: 30,
-    icon: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781434807/SPACE_ICON_dvwgrd.png",
+    glyph: "spaces",
   },
   {
     num: "05",
@@ -58,7 +130,7 @@ const ARCHES = [
     image: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=600",
     categories: ["Spacefold™ AI", "Digital Twins", "CAD/CAM Integration", "Generative Layouts", "3D Walkthroughs"],
     factor: 50,
-    icon: "https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1782100987/WhatsApp_Image_2026-06-17_at_11.02.45_PM-Photoroom_gdcizb.png",
+    icon: "/spacefold/spacefold-logo.png",
   },
 ];
 
@@ -1731,7 +1803,7 @@ export default function ExperienceDimensionsSection() {
 
       {/* ── Bottom-Left Corner Decorative Image ── */}
       <img
-        src="https://res.cloudinary.com/dcryxjtb3/image/upload/q_auto/f_auto/v1781269978/ed_lc_v3jbbm.png"
+        src="/images/ed-left-corner.jpg"
         alt=""
         className="ed-corner-img"
         aria-hidden="true"
@@ -1884,20 +1956,22 @@ export default function ExperienceDimensionsSection() {
                     <div className="ed-arch-text-content">
                       <span className="ed-arch-num">{arch.num}</span>
                       {arch.icon ? (
-                        <img 
-                          src={arch.icon} 
-                          alt="" 
-                          style={{ 
-                            width: "36px", 
-                            height: "36px", 
-                            objectFit: "contain", 
+                        <img
+                          src={arch.icon}
+                          alt=""
+                          style={{
+                            width: "36px",
+                            height: "36px",
+                            objectFit: "contain",
                             marginTop: "20px",
                             marginLeft: "auto",
                             marginRight: "auto",
                             display: "block",
                             filter: "drop-shadow(0 4px 8px rgba(80, 50, 0, 0.45))",
-                          }} 
+                          }}
                         />
+                      ) : arch.glyph ? (
+                        <DimensionGlyphIcon name={arch.glyph} />
                       ) : (
                         <span className="ed-arch-star">✦</span>
                       )}

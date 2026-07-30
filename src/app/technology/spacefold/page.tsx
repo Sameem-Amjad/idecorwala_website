@@ -81,22 +81,46 @@ export default function SpacefoldPage() {
       else drawFrame(0);
     };
 
+    // Decimate the sequence instead of decoding all 241 frames. Each 1280x720 frame costs
+    // ~3.7MB once decoded, so the full set held ~880MB of bitmaps and fired 241 parallel
+    // requests — the main cause of the scroll stutter. drawFrame's nearest-loaded fallback
+    // covers the skipped indices, so the animation still reads as continuous.
+    const step = window.innerWidth <= 640 ? 3 : 2;
+    const frameIndices: number[] = [];
+    for (let i = 0; i < frameCount; i += step) frameIndices.push(i);
+    if (frameIndices[frameIndices.length - 1] !== frameCount - 1) frameIndices.push(frameCount - 1);
+
+    let cancelled = false;
     let loadedCount = 0;
-    for (let i = 0; i < frameCount; i++) {
-      const img = new Image();
-      const idx = i;
-      img.onload = () => {
-        loadedCount++;
-        images[idx] = img;
-        setLoadProgress(Math.round((loadedCount / frameCount) * 100));
-        if (idx === 0) {
-          setCanvasSize();
-          setIsFirstFrameReady(true);
-        }
-      };
-      img.onerror = () => { loadedCount++; };
-      img.src = `/images/spacefold/scroll/ezgif-frame-${String(i + 1).padStart(3, "0")}.jpg`;
-    }
+
+    const loadFrame = (idx: number) =>
+      new Promise<void>((resolve) => {
+        const img = new Image();
+        const done = () => {
+          loadedCount++;
+          setLoadProgress(Math.round((loadedCount / frameIndices.length) * 100));
+          resolve();
+        };
+        img.onload = () => {
+          images[idx] = img;
+          if (idx === 0) {
+            setCanvasSize();
+            setIsFirstFrameReady(true);
+          }
+          done();
+        };
+        img.onerror = done;
+        img.src = `/images/spacefold/scroll/ezgif-frame-${String(idx + 1).padStart(3, "0")}.jpg`;
+      });
+
+    // Sequential batches keep the connection free for the rest of the page.
+    void (async () => {
+      const batchSize = 10;
+      for (let i = 0; i < frameIndices.length; i += batchSize) {
+        if (cancelled) return;
+        await Promise.all(frameIndices.slice(i, i + batchSize).map(loadFrame));
+      }
+    })();
 
     setCanvasSize();
     setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -117,8 +141,11 @@ export default function SpacefoldPage() {
     window.addEventListener("resize", setCanvasSize);
 
     return () => {
+      cancelled = true;
       st.kill();
       window.removeEventListener("resize", setCanvasSize);
+      // Drop bitmap references so the decoded frames can be collected on navigation.
+      images.fill(null);
     };
   }, []);
 
@@ -126,7 +153,8 @@ export default function SpacefoldPage() {
     <>
       {/* ── Global style block ── */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+        /* Cormorant Garamond and Inter are already self-hosted via next/font in layout.tsx.
+           The runtime @import that used to live here re-fetched them render-blocking. */
 
         .sf-grain {
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;

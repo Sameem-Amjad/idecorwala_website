@@ -165,6 +165,32 @@
   transform: scale(1.04);
 }
 
+/* Stand-in shown when a member has no headshot supplied yet. */
+.initialsFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(150deg, #f3ece1 0%, #e4d9c8 100%);
+}
+
+.initialsFallback::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 32% 26%, rgba(189, 138, 48, 0.18), transparent 62%);
+}
+
+.initialsText {
+  position: relative;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #761417;
+}
+
 @media (max-width: 1024px) {
   .container {
     grid-template-columns: 1fr;
