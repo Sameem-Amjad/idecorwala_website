@@ -47,7 +47,7 @@ export default function HeroSection() {
               </span>
             </Link>
             <Link 
-              href="/partner-portal" 
+              href="/company/partner-portal" 
               className="inline-flex h-12 items-center justify-center gap-3 border border-[#1b1714] px-8 text-[11px] font-bold uppercase tracking-[0.14em] text-[#1b1714] transition-all hover:-translate-y-0.5 hover:border-[#c39a48] hover:text-[#c39a48] shrink-0 text-center"
               style={{ minWidth: "210px" }}
             >

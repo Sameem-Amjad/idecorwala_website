@@ -15,13 +15,13 @@ interface TeamMember {
 // photography is supplied, each member renders an initials tile — set `image` to a
 // path under /public to switch any of them back to a photo.
 const teamMembers: TeamMember[] = [
-  { name: "Yamini Thaker", role: "Director - Operations" },
-  { name: "Arindam Banerjee", role: "Chief Revenue Officer" },
-  { name: "Druv Agarwal", role: "Chief Delivery Officer" },
-  { name: "Bhaskar Tyagi", role: "Head of Procurement" },
+  { name: "Yamini Thaker", role: "Director - Operations", image: "/team/Yamini.jpg" },
+  { name: "Arindam Banerjee", role: "Chief Revenue Officer", image: "/team/Arindam.jpg" },
+  { name: "Druv Agarwal", role: "Chief Delivery Officer", image: "/team/Druv.webp" },
+  { name: "Bhaskar Tyagi", role: "Head of Procurement", image: "/team/Bhaskar.webp" },
 ];
 
-const CEO: TeamMember = { name: "Viral Thaker", role: "Founder & CEO" };
+const CEO: TeamMember = { name: "Viral Thaker", role: "Founder & CEO" , image: "/team/Viral_Thaker_web.webp"};
 
 const initialsOf = (name: string) =>
   name

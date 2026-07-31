@@ -51,7 +51,7 @@ export default function OurPerspective() {
           </p>
           
           <div className="mt-8">
-            <Link className={styles.button} href="/insights">
+            <Link className={styles.button} href="/company/thought-leadership">
               Explore Insights <ArrowRight size={15} />
             </Link>
           </div>

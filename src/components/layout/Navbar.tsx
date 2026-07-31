@@ -999,9 +999,9 @@ export default function Navbar() {
                   { key: "services", label: "SERVICES", subtitle: "What We Offer", icon: Hammer, isDropdown: true },
                   { key: "products", label: "PRODUCTS", subtitle: "Curated Selections", icon: Box, isDropdown: true },
                   { key: "technology", label: "TECHNOLOGY", subtitle: "Innovation in Design", icon: Network, isDropdown: true },
-                  { key: "about", label: "ABOUT US", subtitle: "Our Story", icon: User, href: "/about" },
-                  { key: "thought-leadership", label: "THOUGHT LEADERSHIP", subtitle: "Insights & Ideas", icon: Lightbulb, href: "/thought-leadership" },
-                  { key: "partner-portal", label: "PARTNER PORTAL", subtitle: "Collaborate with Us", icon: Handshake, href: "/partner-portal" }
+                  { key: "about", label: "ABOUT US", subtitle: "Our Story", icon: User, href: "/company/about" },
+                  { key: "thought-leadership", label: "THOUGHT LEADERSHIP", subtitle: "Insights & Ideas", icon: Lightbulb, href: "/company/thought-leadership" },
+                  { key: "partner-portal", label: "PARTNER PORTAL", subtitle: "Collaborate with Us", icon: Handshake, href: "/company/partner-portal" }
                 ].map((item) => {
                   const isOpen = openMobileGroup === item.key;
                   const IconComponent = item.icon;

@@ -14,7 +14,7 @@ const ARTICLES = [
     icon: Leaf,
     title: "Designing for a Greener Tomorrow",
     desc: "How sustainable design choices today create resilient and responsible spaces for tomorrow.",
-    href: "/insights/designing-for-a-greener-tomorrow",
+    href: "/company/thought-leadership/designing-for-a-greener-tomorrow",
   },
   {
     image: "/imgs/interior_lounge.png",
@@ -22,7 +22,7 @@ const ARTICLES = [
     icon: PenTool,
     title: "Human-Centric Spaces That Inspire",
     desc: "Why the future of design lies in understanding people and crafting meaningful experiences.",
-    href: "/insights/human-centric-spaces-that-inspire",
+    href: "/company/thought-leadership/human-centric-spaces-that-inspire",
   },
   {
     image: "/imgs/construction_sunset.png",
@@ -30,7 +30,7 @@ const ARTICLES = [
     icon: Globe,
     title: "Building Smarter at Every Step",
     desc: "Emerging technologies and innovations transforming construction and delivery.",
-    href: "/insights/building-smarter-at-every-step",
+    href: "/company/thought-leadership/building-smarter-at-every-step",
   },
   {
     image: "/imgs/person_sketching.png",
@@ -38,7 +38,7 @@ const ARTICLES = [
     icon: BookOpen,
     title: "From Vision to Value: The iDecorwala Way",
     desc: "Our approach to turning ideas into impactful, enduring built environments.",
-    href: "/insights/from-vision-to-value",
+    href: "/company/thought-leadership/from-vision-to-value",
   },
 ];
 

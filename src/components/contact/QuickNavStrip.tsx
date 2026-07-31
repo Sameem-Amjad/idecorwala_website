@@ -10,8 +10,8 @@ const quickLinks = [
   { id: 'services', icon: Briefcase, label: "Services", href: "/services" },
   { id: 'products', icon: Box, label: "Products", href: "/products" },
   { id: 'technology', icon: Cpu, label: "Technology", href: "/technology" },
-  { id: 'partner', icon: Handshake, label: "Partner Portal", href: "/partner-portal" },
-  { id: 'thought', icon: BookOpen, label: "Thought Leadership", href: "/thought-leadership" },
+  { id: 'partner', icon: Handshake, label: "Partner Portal", href: "/company/partner-portal" },
+  { id: 'thought', icon: BookOpen, label: "Thought Leadership", href: "/company/thought-leadership" },
 ];
 
 export default function QuickNavStrip() {

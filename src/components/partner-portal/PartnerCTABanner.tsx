@@ -24,7 +24,7 @@ export default function PartnerCTABanner() {
           </Link>
           <Link 
             className="inline-flex items-center gap-4 px-8 py-3.5 border border-[#c39a48] rounded-[4px] text-[12px] font-bold uppercase tracking-[0.1em] text-[#a77824] transition-all hover:bg-[#c39a48] hover:text-[#1b1714]" 
-            href="/partner-portal"
+            href="/company/partner-portal"
           >
             Login to Portal <ArrowRight size={15} />
           </Link>

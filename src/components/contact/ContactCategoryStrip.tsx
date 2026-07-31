@@ -32,7 +32,7 @@ const contactCategories = [
     icon: User, 
     title: "Join Our Team", 
     desc: "Explore career opportunities and grow with us.", 
-    href: "/careers" 
+    href: "/company/careers" 
   },
 ];
 
