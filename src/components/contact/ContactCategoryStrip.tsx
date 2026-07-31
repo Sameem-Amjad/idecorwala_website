@@ -11,7 +11,7 @@ const contactCategories = [
     icon: Phone, 
     title: "Technical Consultation", 
     desc: "Speak with our experts for tailored solutions.", 
-    href: "tel:+911244566000" 
+    href: "tel:+918448440910"
   },
   { 
     id: 'enquiries',

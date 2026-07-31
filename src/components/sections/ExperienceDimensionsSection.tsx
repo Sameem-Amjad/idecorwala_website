@@ -91,6 +91,7 @@ const ARCHES: ArchItem[] = [
     categories: ["Wallpaper", "Wall Murals", "Wall Art & Decals", "Wall Sculptures", "Finishes"],
     factor: 0,
     glyph: "walls",
+    icon: "/arches/walls.png"
   },
   {
     num: "02",
@@ -99,6 +100,7 @@ const ARCHES: ArchItem[] = [
     categories: ["Wood", "Vinyl", "Epoxy", "Carpet", "Turf"],
     factor: 10,
     glyph: "floors",
+    icon: "/arches/floor.png"
   },
   {
     num: "03",
@@ -107,6 +109,7 @@ const ARCHES: ArchItem[] = [
     categories: ["Gypsum", "PVC Panels", "Stretch Ceilings", "Ceiling Finishes"],
     factor: 20,
     glyph: "ceilings",
+    icon: "/arches/ceiling.png"
   },
   {
     num: "04",
@@ -115,6 +118,7 @@ const ARCHES: ArchItem[] = [
     categories: ["Modular Kitchens", "Furniture", "Lighting", "Décor & Accessories", "Turnkey Spaces"],
     factor: 30,
     glyph: "spaces",
+    icon: "/arches/space.png"
   },
   {
     num: "05",
@@ -122,7 +126,7 @@ const ARCHES: ArchItem[] = [
     image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600",
     categories: ["EPC Delivery", "Civil & Structural", "MEP Infrastructure", "HVAC Engineering", "Turnkey Interiors"],
     factor: 40,
-    icon: "/experience-logo.png"
+    icon: "/arches/experience.png"
   },
   {
     num: "06",
@@ -130,7 +134,7 @@ const ARCHES: ArchItem[] = [
     image: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=600",
     categories: ["Spacefold™ AI", "Digital Twins", "CAD/CAM Integration", "Generative Layouts", "3D Walkthroughs"],
     factor: 50,
-    icon: "/spacefold/spacefold-logo.png",
+    icon: "/arches/spacefold.png",
   },
 ];
 

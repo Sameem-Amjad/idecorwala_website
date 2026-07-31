@@ -1426,7 +1426,11 @@ export default function FooterSection() {
 
         .footer-contact-item {
           flex: 1;
-          max-width: 220px;
+          /* 220px left only ~160px for text once the icon and gap were subtracted, which
+             broke the address mid-parenthesis and orphaned the pincode. There is plenty of
+             room in this row, so widen it enough for the longest address line to sit on
+             one line. Below 1024px these stack at full width, so this only affects desktop. */
+          max-width: 300px;
           display: flex;
           align-items: flex-start;
           gap: 14px;
@@ -1601,38 +1605,6 @@ export default function FooterSection() {
           font-size: 13px;
           font-weight: 400;
           color: #8C857A;
-        }
-
-        .made-by-assanj-link {
-          display: inline-flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 6px;
-          text-decoration: none;
-          color: #8C857A;
-          font-size: 12px;
-          font-weight: 500;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          transition: color 0.2s ease;
-        }
-
-        .made-by-assanj-link:hover {
-          color: #C9A050;
-        }
-
-        .made-by-assanj-logo {
-          height: 72px;
-          width: auto;
-          object-fit: contain;
-          border-radius: 4px;
-          transition: transform 0.2s ease, filter 0.2s ease;
-          filter: brightness(0.95) contrast(1.05);
-        }
-
-        .made-by-assanj-link:hover .made-by-assanj-logo {
-          transform: scale(1.05);
-          filter: brightness(1.1) contrast(1.1);
         }
 
         /* --- RESPONSIVE BREAKPOINTS --- */
@@ -1950,12 +1922,18 @@ export default function FooterSection() {
                   <MapPinIcon aria-hidden="true" />
                 </div>
                 <div className="footer-contact-info">
-                  <span className="footer-contact-header">Offices</span>
+                  <span className="footer-contact-header">Experience Studio</span>
+                  {/* Split across short lines because this column is capped at 220px. */}
                   <div className="footer-contact-content">
-                    <div>Chennai (HQ)<span className="footer-pipe-sep">|</span>Delhi NCR</div>
-                    <div>Mumbai<span className="footer-pipe-sep">|</span>Bengaluru</div>
-                    <div>Hyderabad<span className="footer-pipe-sep">|</span>Pune</div>
-                    <div>Kolkata</div>
+                    <div>Old No. 76, New No. 52</div>
+                    <div>Sreerosh Renaissance</div>
+                    <div>New Avadi Road (Above HDFC Bank)</div>
+                    <div>Kilpauk, Chennai &mdash; 600010</div>
+                    <div>Tamil Nadu, India</div>
+                    <div style={{ marginTop: "10px" }}>Also in:</div>
+                    <div>Delhi NCR<span className="footer-pipe-sep">|</span>Mumbai</div>
+                    <div>Bengaluru<span className="footer-pipe-sep">|</span>Hyderabad</div>
+                    <div>Pune<span className="footer-pipe-sep">|</span>Kolkata</div>
                   </div>
                 </div>
               </div>
@@ -1990,19 +1968,6 @@ export default function FooterSection() {
           {/* Bottom Copyright Bar - Dynamic Year */}
           <div className="footer-copyright-bar">
             <span className="footer-copyright-text">© {new Date().getFullYear()} iDecorwala Interiors Pvt. Ltd. All rights reserved.</span>
-            <a 
-              href="https://www.instagram.com/assanj2025/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="made-by-assanj-link"
-            >
-              <img 
-                src="/assanj-logo.png" 
-                alt="Assanj Logo" 
-                className="made-by-assanj-logo"
-              />
-              <span>Made By Assanj</span>
-            </a>
           </div>
         </div>
       </div>

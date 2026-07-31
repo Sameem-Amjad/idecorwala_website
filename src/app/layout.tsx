@@ -82,11 +82,18 @@ export default function RootLayout({
     "name": "iDecorwala",
     "url": BASE_URL,
     "logo": `${BASE_URL}/id-logo-red.png`,
+    // Full postal address so Google can tie the site to the Maps listing — locality
+    // alone was not enough to match it. addressCountry uses the ISO code per schema.org.
     "address": {
       "@type": "PostalAddress",
+      "streetAddress":
+        "Old No. 76, New No. 52, Sreerosh Renaissance, New Avadi Road (Above HDFC Bank), Kilpauk",
       "addressLocality": "Chennai",
-      "addressCountry": "India",
+      "addressRegion": "Tamil Nadu",
+      "postalCode": "600010",
+      "addressCountry": "IN",
     },
+    "telephone": "+91-84484-40910",
   };
 
   return (
