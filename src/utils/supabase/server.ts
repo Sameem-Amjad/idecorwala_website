@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { SUPABASE_SCHEMA } from "@/lib/supabaseSchema";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -9,6 +10,7 @@ export const createClient = (cookieStore: Awaited<ReturnType<typeof cookies>>) =
     supabaseUrl!,
     supabaseKey!,
     {
+      db: { schema: SUPABASE_SCHEMA },
       cookies: {
         getAll() {
           return cookieStore.getAll();

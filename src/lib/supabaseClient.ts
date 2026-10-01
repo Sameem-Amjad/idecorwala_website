@@ -1,10 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
+import { SUPABASE_SCHEMA } from "./supabaseSchema";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "placeholder-anon-key";
 
 console.log("[Supabase Client] Initializing with URL:", supabaseUrl);
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  db: { schema: SUPABASE_SCHEMA },
+});
 
 export interface ProductCategory {
   id: string | number;
